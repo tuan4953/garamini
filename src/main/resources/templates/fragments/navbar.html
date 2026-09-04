@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<!--
+  File: src/main/resources/templates/fragments/navbar.html
+  Cách dùng ở layout khác:
+    <div th:replace="~{fragments/navbar :: navbar}"></div>
+
+  Giả định tên role Spring Security: ROLE_ADMIN, ROLE_TECHNICIAN, ROLE_CUSTOMER
+  (hasRole('ADMIN') tự map sang ROLE_ADMIN). Đổi lại cho khớp Enum/DB của bạn nếu khác.
+-->
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/tride-layout.css}">
+</head>
+<body>
+
+<nav th:fragment="navbar" class="main-navbar">
+    <div class="navbar-container">
+
+        <a th:href="@{/}" class="navbar-logo">
+            <i class="bi bi-tools"></i>T-<span class="accent">RIDE</span>
+        </a>
+
+        <!-- ============ MENU: KHÁCH HÀNG ============ -->
+        <ul class="navbar-menu" sec:authorize="hasRole('CUSTOMER')">
+            <li><a th:href="@{/}"><i class="bi bi-house"></i> Trang chủ</a></li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-wrench-adjustable"></i> Dịch vụ
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/services}"><i class="bi bi-list-check"></i> Dịch vụ &amp; bảng giá</a>
+                    <a th:href="@{/appointments/new}"><i class="bi bi-calendar-plus"></i> Đặt lịch sửa chữa</a>
+                    <a th:href="@{/rescue/booking}"><i class="bi bi-life-preserver"></i> Yêu cầu cứu hộ</a>
+                </div>
+            </li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-bicycle"></i> Xe của tôi
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/customer/vehicles}"><i class="bi bi-bicycle"></i> Quản lý xe của tôi</a>
+                    <a th:href="@{/customer/repair-history}"><i class="bi bi-clock-history"></i> Lịch sử sửa chữa</a>
+                    <a th:href="@{/customer/warranty}"><i class="bi bi-shield-check"></i> Yêu cầu bảo hành</a>
+                    <a th:href="@{/customer/favorites}"><i class="bi bi-heart"></i> Dịch vụ yêu thích</a>
+                </div>
+            </li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-calendar-check"></i> Lịch hẹn
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/customer/appointments}"><i class="bi bi-calendar-check"></i> Lịch hẹn của tôi</a>
+                    <a th:href="@{/customer/repair-progress}"><i class="bi bi-graph-up"></i> Theo dõi tiến độ sửa chữa</a>
+                    <a th:href="@{/customer/quotes}"><i class="bi bi-file-earmark-text"></i> Báo giá &amp; xác nhận</a>
+                </div>
+            </li>
+
+            <li><a th:href="@{/customer/invoices}"><i class="bi bi-receipt"></i> Hóa đơn</a></li>
+            <li><a th:href="@{/promotions}"><i class="bi bi-gift"></i> Khuyến mãi</a></li>
+            <li><a th:href="@{/news}"><i class="bi bi-newspaper"></i> Tin tức</a></li>
+        </ul>
+
+        <!-- ============ MENU: KỸ THUẬT VIÊN ============ -->
+        <ul class="navbar-menu" sec:authorize="hasRole('TECHNICIAN')">
+            <li><a th:href="@{/technician/dashboard}"><i class="bi bi-speedometer2"></i> Bảng công việc</a></li>
+            <li><a th:href="@{/technician/assigned-jobs}"><i class="bi bi-clipboard-check"></i> Công việc được giao</a></li>
+            <li><a th:href="@{/technician/intake}"><i class="bi bi-car-front"></i> Tiếp nhận xe</a></li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-search"></i> Chẩn đoán
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/technician/diagnosis}"><i class="bi bi-clipboard-pulse"></i> Kiểm tra &amp; chẩn đoán</a>
+                    <a th:href="@{/technician/notes}"><i class="bi bi-pencil-square"></i> Ghi chú kỹ thuật</a>
+                </div>
+            </li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-gear"></i> Sửa chữa
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/technician/repair-proposal}"><i class="bi bi-tools"></i> Đề xuất sửa chữa &amp; phụ tùng</a>
+                    <a th:href="@{/technician/progress-update}"><i class="bi bi-arrow-repeat"></i> Cập nhật tiến độ sửa chữa</a>
+                    <a th:href="@{/technician/upload-images}"><i class="bi bi-camera"></i> Upload hình ảnh</a>
+                    <a th:href="@{/technician/handover}"><i class="bi bi-check2-circle"></i> Hoàn thành &amp; bàn giao xe</a>
+                </div>
+            </li>
+
+            <li><a th:href="@{/technician/history}"><i class="bi bi-clock-history"></i> Lịch sử công việc</a></li>
+        </ul>
+
+        <!-- ============ MENU: QUẢN LÝ / ADMIN ============ -->
+        <ul class="navbar-menu" sec:authorize="hasRole('ADMIN')">
+            <li><a th:href="@{/admin/dashboard}"><i class="bi bi-grid-1x2"></i> Dashboard</a></li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-people"></i> Người dùng
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/admin/users}"><i class="bi bi-person-badge"></i> Quản lý tài khoản (User)</a>
+                    <a th:href="@{/admin/technicians}"><i class="bi bi-person-gear"></i> Quản lý kỹ thuật viên</a>
+                </div>
+            </li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-wrench-adjustable"></i> Dịch vụ &amp; giá
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/admin/services}"><i class="bi bi-tools"></i> Quản lý dịch vụ</a>
+                    <a th:href="@{/admin/price-list}"><i class="bi bi-tag"></i> Quản lý bảng giá</a>
+                    <a th:href="@{/admin/promotions}"><i class="bi bi-gift"></i> Quản lý khuyến mãi</a>
+                </div>
+            </li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-clipboard-data"></i> Vận hành
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/admin/appointments}"><i class="bi bi-calendar-week"></i> Quản lý lịch hẹn</a>
+                    <a th:href="@{/admin/repair-orders}"><i class="bi bi-file-earmark-medical"></i> Quản lý phiếu sửa chữa</a>
+                    <a th:href="@{/admin/quotes}"><i class="bi bi-file-earmark-text"></i> Quản lý báo giá</a>
+                    <a th:href="@{/admin/spare-parts}"><i class="bi bi-box-seam"></i> Quản lý phụ tùng &amp; kho</a>
+                </div>
+            </li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-cash-coin"></i> Tài chính
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/admin/invoices}"><i class="bi bi-receipt"></i> Quản lý hóa đơn &amp; thanh toán</a>
+                    <a th:href="@{/admin/warranty}"><i class="bi bi-shield-check"></i> Quản lý bảo hành</a>
+                </div>
+            </li>
+
+            <li class="has-dropdown">
+                <button type="button" class="menu-link">
+                    <i class="bi bi-newspaper"></i> Nội dung
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+                <div class="dropdown-panel">
+                    <a th:href="@{/admin/news}"><i class="bi bi-newspaper"></i> Quản lý tin tức &amp; bài viết</a>
+                    <a th:href="@{/admin/reviews}"><i class="bi bi-star"></i> Quản lý đánh giá</a>
+                </div>
+            </li>
+
+            <li><a th:href="@{/admin/reports}"><i class="bi bi-bar-chart-line"></i> Thống kê &amp; báo cáo</a></li>
+        </ul>
+
+        <!-- ============ RIGHT SIDE: icon + user dropdown ============ -->
+        <div class="navbar-right">
+
+            <button type="button" class="icon-btn" title="Yêu thích" sec:authorize="hasRole('CUSTOMER')">
+                <i class="bi bi-heart"></i>
+            </button>
+
+            <button type="button" class="icon-btn" title="Thông báo" sec:authorize="isAuthenticated()">
+                <i class="bi bi-bell"></i>
+                <span class="badge-dot"></span>
+            </button>
+
+            <div class="user-menu" sec:authorize="isAuthenticated()">
+                <button type="button" class="user-button">
+                    <span class="user-avatar admin" sec:authorize="hasRole('ADMIN')"><i class="bi bi-shield-lock"></i></span>
+                    <span class="user-avatar ktv" sec:authorize="hasRole('TECHNICIAN')"><i class="bi bi-wrench"></i></span>
+                    <span class="user-avatar customer" sec:authorize="hasRole('CUSTOMER')"><i class="bi bi-person"></i></span>
+                    <span>Tài khoản</span>
+                    <i class="bi bi-chevron-down" style="font-size:11px;"></i>
+                </button>
+
+                <div class="user-dropdown">
+
+                    <!-- KHÁCH HÀNG -->
+                    <div sec:authorize="hasRole('CUSTOMER')">
+                        <a th:href="@{/customer/profile}"><i class="bi bi-person-circle"></i> Thông tin cá nhân</a>
+                        <a th:href="@{/customer/vehicles}"><i class="bi bi-bicycle"></i> Xe của tôi</a>
+                        <a th:href="@{/customer/appointments}"><i class="bi bi-calendar-check"></i> Lịch hẹn của tôi</a>
+                        <a th:href="@{/customer/invoices}"><i class="bi bi-receipt"></i> Hóa đơn</a>
+                        <a th:href="@{/customer/repair-history}"><i class="bi bi-clock-history"></i> Lịch sử sửa chữa</a>
+                        <a th:href="@{/customer/reviews}"><i class="bi bi-star"></i> Đánh giá dịch vụ</a>
+                    </div>
+
+                    <!-- KTV -->
+                    <div sec:authorize="hasRole('TECHNICIAN')">
+                        <a th:href="@{/technician/profile}"><i class="bi bi-person-circle"></i> Thông tin cá nhân</a>
+                        <a th:href="@{/technician/assigned-jobs}"><i class="bi bi-clipboard-check"></i> Công việc được giao</a>
+                        <a th:href="@{/technician/history}"><i class="bi bi-clock-history"></i> Lịch sử công việc</a>
+                    </div>
+
+                    <!-- ADMIN -->
+                    <div sec:authorize="hasRole('ADMIN')">
+                        <a th:href="@{/admin/profile}"><i class="bi bi-person-circle"></i> Thông tin cá nhân</a>
+                        <a th:href="@{/admin/dashboard}"><i class="bi bi-grid-1x2"></i> Dashboard</a>
+                        <a th:href="@{/admin/reports}"><i class="bi bi-bar-chart-line"></i> Thống kê &amp; báo cáo</a>
+                    </div>
+
+                    <div class="user-dropdown-divider"></div>
+
+                    <form th:action="@{/logout}" method="post" style="margin:0;">
+                        <button type="submit" style="width:100%;border:none;background:transparent;padding:10px 12px;
+                            text-align:left;border-radius:7px;color:#dc3545;cursor:pointer;">
+                            <i class="bi bi-box-arrow-right"></i> Đăng xuất
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- CHƯA ĐĂNG NHẬP -->
+            <a th:href="@{/login}" class="menu-link" sec:authorize="!isAuthenticated()">
+                <i class="bi bi-box-arrow-in-right"></i> Đăng nhập
+            </a>
+
+        </div>
+
+    </div>
+</nav>
+
+</body>
+</html>

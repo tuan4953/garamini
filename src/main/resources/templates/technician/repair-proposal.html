@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Đề Xuất Sửa Chữa & Phụ Tùng</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+
+<div class="container py-4" style="max-width: 700px;">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="bi bi-file-earmark-plus"></i> Đề Xuất Sửa Chữa & Phụ Tùng</h2>
+    <a th:href="@{/technician/assigned-jobs}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form th:action="@{/technician/repair-proposal}" th:object="${proposalRequest}" method="post">
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Mã / ID Xe (*)</label>
+          <input type="number" th:field="*{vehicleId}" class="form-control" placeholder="Nhập ID Xe" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Mã KTV thực hiện (Tùy chọn)</label>
+          <input type="number" th:field="*{technicianId}" class="form-control" placeholder="Nhập ID KTV">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Chi tiết tình trạng xe cần xử lý</label>
+          <textarea th:field="*{initialCondition}" class="form-control" rows="3" placeholder="Nhập tóm tắt hạng mục bị hỏng hoặc cần khắc phục..."></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label fw-bold">Đề xuất phụ tùng & Dịch vụ thay thế</label>
+          <textarea th:field="*{diagnosticResult}" class="form-control" rows="4" placeholder="Liệt kê danh sách linh kiện, phụ tùng đề xuất thay thế và tiền công..."></textarea>
+        </div>
+
+        <div class="d-grid gap-2">
+          <button type="submit" class="btn btn-success btn-lg">
+            <i class="bi bi-send"></i> Gửi Đề Xuất Sửa Chữa
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

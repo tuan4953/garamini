@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>KTV - Danh Sách Quy Trình Dịch Vụ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-dark text-white">
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="text-warning">DANH SÁCH HẠNG MỤC DỊCH VỤ (DÀNH CHO KTV)</h3>
+        <span class="badge bg-info fs-6">Kỹ thuật viên</span>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-dark table-hover table-striped align-middle border">
+            <thead>
+            <tr>
+                <th>Mã DV</th>
+                <th>Tên Dịch Vụ / Hạng Mục</th>
+                <th>Mô Tả Quy Trình</th>
+                <th>Đơn Giá</th>
+                <th>Thao Tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="service : ${services}">
+                <td th:text="${service.id}">#1</td>
+                <td class="fw-bold text-warning" th:text="${service.name}">Thay nhớt máy</td>
+                <td th:text="${service.description}">Kiểm tra và thay nhớt theo tiêu chuẩn...</td>
+                <td class="text-success fw-bold" th:text="${#numbers.formatDecimal(service.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">150,000 VNĐ</td>
+                <td>
+                    <a th:href="@{/services/{id}(id=${service.id})}" class="btn btn-warning btn-sm">Xem quy trình</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

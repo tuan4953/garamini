@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Đặt Lịch Bảo Dưỡng - Motorbike Garage</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<!-- Tự động bỏ qua fragment nếu chưa định nghĩa để không gây lỗi 500 -->
+
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container my-5" style="max-width: 650px;">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Đặt Lịch Bảo Dưỡng / Sửa Chữa</h4>
+        </div>
+        <div class="card-body">
+            <form th:action="@{/customer/appointments/create}" th:object="${appointmentRequest}" method="post">
+
+                <div class="mb-3">
+                    <label for="vehicleId" class="form-label">Chọn Phương Tiện (*):</label>
+                    <select class="form-select" id="vehicleId" th:field="*{vehicleId}" required>
+                        <option value="">-- Chọn xe của bạn --</option>
+                        <!-- Kiểm tra an toàn th:if="${vehicles != null}" -->
+                        <option th:if="${vehicles != null}"
+                                th:each="v : ${vehicles}"
+                                th:value="${v.id}"
+                                th:text="${v.licensePlate}">
+                        </option>
+                    </select>
+                    <!-- Cảnh báo nếu khách chưa có xe / chưa đăng nhập -->
+                    <small class="text-muted" th:if="${#lists.isEmpty(vehicles)}">
+                        * Bạn chưa đăng nhập hoặc chưa đăng ký xe. Vui lòng đăng nhập để chọn xe của bạn.
+                    </small>
+                    <div class="text-danger" th:if="${#fields.hasErrors('vehicleId')}" th:errors="*{vehicleId}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="appointmentDate" class="form-label">Thời Gian Hẹn (*):</label>
+                    <input type="datetime-local" class="form-control" id="appointmentDate" th:field="*{appointmentDate}" required>
+                    <div class="text-danger" th:if="${#fields.hasErrors('appointmentDate')}" th:errors="*{appointmentDate}"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label for="notes" class="form-label">Mô Tả Vấn Đề / Yêu Cầu Bảo Dưỡng:</label>
+                    <textarea class="form-control" id="notes" th:field="*{notes}" rows="4"
+                              placeholder="VD: Thay dầu máy, kiểm tra phanh trước, xe bị kêu ở lốc máy..."></textarea>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a th:href="@{/}" class="btn btn-secondary">Quay lại</a>
+                    <button type="submit" class="btn btn-success">Xác Nhận Đặt Lịch</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

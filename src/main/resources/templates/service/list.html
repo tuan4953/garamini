@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Bảng Giá Dịch Vụ - Motorbike Garage</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header :: header}"></div>
+<div th:replace="~{fragments/navbar :: navbar}"></div>
+
+<div class="container my-5">
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">BẢNG GIÁ DỊCH VỤ & BẢO DƯỠNG XE MÁY</h2>
+    <p class="text-muted">Cam kết chất lượng phụ tùng chính hãng - Dịch vụ chuyên nghiệp</p>
+  </div>
+
+  <div class="row" th:if="${not #lists.isEmpty(services)}">
+    <div class="col-md-4 mb-4" th:each="srv : ${services}">
+      <div class="card h-100 shadow-sm border-0">
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title text-primary fw-bold" th:text="${srv.name}">Bảo Dưỡng Toàn Bộ</h5>
+          <p class="card-text text-muted flex-grow-1" th:text="${srv.description}">Mô tả ngắn...</p>
+          <div class="mb-3">
+            <span class="fs-4 text-danger fw-bold" th:text="${#numbers.formatDecimal(srv.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">200.000 VNĐ</span>
+            <small class="text-muted d-block" th:if="${srv.estimatedDurationMinutes != null}">
+              ⏱️ Thời gian: <span th:text="${srv.estimatedDurationMinutes}">45</span> phút
+            </small>
+          </div>
+          <a th:href="@{/customer/appointments/create}" class="btn btn-outline-primary w-100">Đặt Lịch Ngay</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div th:if="${#lists.isEmpty(services)}" class="alert alert-info text-center">
+    Hiện tại chưa có dịch vụ nào được niêm yết.
+  </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

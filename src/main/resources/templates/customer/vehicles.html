@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Xe Của Tôi - Garage Auto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0 text-primary"><i class="fa-solid fa-car me-2"></i> Danh Sách Xe Của Tôi</h3>
+        <!-- Nút mở Modal Thêm Xe -->
+        <button class="btn btn-primary fw-bold" data-bs-toggle="modal" data-bs-target="#addVehicleModal">
+            <i class="fa-solid fa-plus me-1"></i> Thêm Xe Mới
+        </button>
+    </div>
+
+    <!-- Notification -->
+    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-circle-check me-2"></i> Thêm xe thành công!
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <!-- Vehicle Cards -->
+    <div class="row g-4" th:if="${vehicles != null and !#lists.isEmpty(vehicles)}">
+        <div class="col-md-6 col-lg-4" th:each="v : ${vehicles}">
+            <div class="card shadow-sm border-0 h-100 rounded-3">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="badge bg-primary fs-6 px-3 py-2" th:text="${v?.licensePlate ?: '30A-000.00'}">30F-123.45</span>
+                        <span class="text-muted small" th:text="${v?.year != null ? 'Năm SX: ' + v.year : ''}">Năm SX: 2022</span>
+                    </div>
+                    <h5 class="card-title fw-bold text-dark" th:text="${(v?.make ?: 'Hãng xe') + ' ' + (v?.model ?: 'Dòng xe')}">Toyota Camry</h5>
+                    <p class="card-text text-secondary mb-1"><i class="fa-solid fa-palette me-2"></i>Màu sắc: <span th:text="${v?.color ?: 'N/A'}">Trắng</span></p>
+                    <p class="card-text text-secondary"><i class="fa-solid fa-barcode me-2"></i>Số VIN: <span th:text="${v?.vin ?: 'N/A'}">123456789</span></p>
+                </div>
+                <div class="card-footer bg-white border-0 pt-0 pb-3">
+                    <a th:href="@{/customer/appointments(vehicleId=${v?.id})}" class="btn btn-outline-primary btn-sm w-100">
+                        <i class="fa-solid fa-calendar-check me-1"></i> Đặt lịch bảo dưỡng cho xe này
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Empty State -->
+    <div class="alert alert-info text-center py-5 shadow-sm" th:if="${vehicles == null or #lists.isEmpty(vehicles)}">
+        <i class="fa-solid fa-car-side fa-3x text-secondary mb-3"></i>
+        <h5>Bạn chưa đăng ký phương tiện nào.</h5>
+        <p class="text-muted">Thêm xe ngay để dễ dàng đặt lịch và theo dõi lịch sử bảo dưỡng.</p>
+    </div>
+</div>
+
+<!-- Modal Thêm Xe Mới -->
+<div class="modal fade" id="addVehicleModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form th:action="@{/customer/vehicles/add}" method="post">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title fw-bold"><i class="fa-solid fa-car me-2"></i>Thêm Xe Mới</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Biển Số Xe <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" name="licensePlate" placeholder="VD: 30F-123.45" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Hãng Xe</label>
+                            <input type="text" class="form-control" name="make" placeholder="VD: Toyota, Mazda...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Dòng Xe (Model)</label>
+                            <input type="text" class="form-control" name="model" placeholder="VD: CX-5, Camry...">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Năm Sản Xuất</label>
+                            <input type="number" class="form-control" name="year" placeholder="VD: 2022">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Màu Xe</label>
+                            <input type="text" class="form-control" name="color" placeholder="VD: Trắng, Đen...">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="submit" class="btn btn-primary fw-bold">Lưu Xe</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

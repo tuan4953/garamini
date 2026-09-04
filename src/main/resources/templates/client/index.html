@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gara Xe Máy - Trang Chủ</title>
+
+    <!-- Bootstrap 5 & Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f5f6f8;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 35px 20px 60px;
+        }
+
+        .hero {
+            background: #ffffff;
+            border-radius: 14px;
+            padding: 45px;
+            margin-bottom: 30px;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content { max-width: 650px; }
+        .hero h1 { font-size: 38px; font-weight: 700; margin-bottom: 15px; color: #111; }
+        .hero p { color: #666; font-size: 16px; line-height: 1.7; margin-bottom: 25px; }
+        .hero-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+
+        .section { margin-top: 40px; }
+        .section-title { margin-bottom: 20px; }
+        .section-title h2 { font-size: 25px; font-weight: 700; margin: 0; }
+        .section-title p { margin-top: 6px; color: #777; }
+
+        .service-grid, .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .service-card, .quick-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 22px;
+            border: 1px solid #eeeeee;
+            text-decoration: none;
+            color: #222;
+            transition: all 0.2s ease;
+        }
+
+        .service-card:hover, .quick-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            background: #fafafa;
+        }
+
+        .service-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: #f1f3f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+            margin-bottom: 15px;
+        }
+
+        .service-card h3, .quick-card h3 { font-size: 17px; margin-bottom: 8px; }
+        .service-card p, .quick-card p { font-size: 14px; color: #777; margin: 0; line-height: 1.5; }
+        .quick-card i { font-size: 23px; margin-bottom: 12px; display: block; }
+
+        @media (max-width: 900px) {
+            .service-grid, .quick-actions { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .hero { padding: 30px; }
+            .hero h1 { font-size: 30px; }
+        }
+
+        @media (max-width: 600px) {
+            .main-content { padding: 20px 15px 40px; }
+            .hero { padding: 25px; min-height: 250px; }
+            .hero h1 { font-size: 26px; }
+            .service-grid, .quick-actions { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- 1. NHÚNG FILE HEADER (Thường chứa Topbar, Logo, Tài khoản) -->
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+<!-- NỘI DUNG CHÍNH -->
+<main class="main-content">
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>Chăm sóc xe máy <br> đơn giản hơn</h1>
+            <p>
+                Đặt lịch bảo dưỡng, sửa chữa, độ xe hoặc yêu cầu cứu hộ ngay trên website.
+                Theo dõi tình trạng xe và lịch sử sửa chữa một cách thuận tiện.
+            </p>
+            <div class="hero-buttons">
+                <a th:href="@{/appointments/new}" class="btn btn-dark">
+                    <i class="bi bi-calendar-plus"></i> Đặt lịch ngay
+                </a>
+                <a th:href="@{/rescue/booking}" class="btn btn-outline-dark">
+                    <i class="bi bi-life-preserver"></i> Gọi cứu hộ
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- DỊCH VỤ -->
+    <section class="section">
+        <div class="section-title">
+            <h2>Dịch vụ của chúng tôi</h2>
+            <p>Các dịch vụ chăm sóc và sửa chữa xe máy</p>
+        </div>
+
+        <div class="service-grid">
+            <a th:href="@{/services}" class="service-card">
+                <div class="service-icon"><i class="bi bi-wrench"></i></div>
+                <h3>Bảo dưỡng xe</h3>
+                <p>Kiểm tra và bảo dưỡng xe định kỳ.</p>
+            </a>
+
+            <a th:href="@{/services}" class="service-card">
+                <div class="service-icon"><i class="bi bi-gear"></i></div>
+                <h3>Sửa chữa</h3>
+                <p>Khắc phục các vấn đề về động cơ, điện và các bộ phận khác.</p>
+            </a>
+
+            <a th:href="@{/tuning}" class="service-card">
+                <div class="service-icon"><i class="bi bi-speedometer2"></i></div>
+                <h3>Độ xe</h3>
+                <p>Nâng cấp và lắp đặt phụ kiện cho xe máy.</p>
+            </a>
+
+            <a th:href="@{/rescue/booking}" class="service-card">
+                <div class="service-icon"><i class="bi bi-life-preserver"></i></div>
+                <h3>Cứu hộ</h3>
+                <p>Hỗ trợ khi xe gặp sự cố trên đường.</p>
+            </a>
+        </div>
+    </section>
+
+    <!-- CUSTOMER QUICK ACTION -->
+    <section class="section" sec:authorize="isAuthenticated()">
+        <div class="section-title">
+            <h2>Quản lý xe của bạn</h2>
+            <p>Các thao tác thường dùng</p>
+        </div>
+
+        <div class="quick-actions">
+            <a th:href="@{/customer/vehicles}" class="quick-card">
+                <i class="bi bi-bicycle"></i>
+                <h3>Xe của tôi</h3>
+                <p>Quản lý danh sách xe.</p>
+            </a>
+
+            <a th:href="@{/customer/appointments}" class="quick-card">
+                <i class="bi bi-calendar-check"></i>
+                <h3>Lịch hẹn</h3>
+                <p>Theo dõi các lịch hẹn.</p>
+            </a>
+
+            <a th:href="@{/customer/invoices}" class="quick-card">
+                <i class="bi bi-receipt"></i>
+                <h3>Hóa đơn</h3>
+                <p>Xem hóa đơn và thanh toán.</p>
+            </a>
+
+            <a th:href="@{/customer/repair-history}" class="quick-card">
+                <i class="bi bi-clock-history"></i>
+                <h3>Lịch sử sửa chữa</h3>
+                <p>Xem lịch sử bảo dưỡng và sửa chữa.</p>
+            </a>
+        </div>
+    </section>
+
+</main>
+
+<!-- 3. NHÚNG FILE FOOTER -->
+<div th:replace="~{fragments/footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

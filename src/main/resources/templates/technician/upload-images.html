@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tải Ảnh Xe & Phụ Tùng</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <style>
+        .image-preview {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-4" style="max-width: 700px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-camera"></i> Tải Lên Ảnh Kiểm Tra / Sửa Chữa</h2>
+        <a th:href="@{/technician/assigned-jobs}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <!-- QUAN TRỌNG: enctype="multipart/form-data" để gửi file -->
+            <form th:action="@{/technician/upload-images}"
+                  th:object="${uploadRequest}"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Mã / ID Xe (*)</label>
+                    <input type="number" th:field="*{vehicleId}" class="form-control" placeholder="Nhập ID Xe" required>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Chọn hình ảnh (Có thể chọn nhiều ảnh)</label>
+                    <input type="file"
+                           th:field="*{images}"
+                           class="form-control"
+                           accept="image/*"
+                           multiple
+                           id="imageInput"
+                           onchange="previewImages(event)"
+                           required>
+                    <div class="form-text">Cho phép các định dạng: .jpg, .jpeg, .png</div>
+                </div>
+
+                <!-- Vùng hiển thị xem trước ảnh trước khi bấm nút gửi -->
+                <div class="mb-3" id="previewContainer" style="display: none;">
+                    <label class="form-label fw-bold">Ảnh đã chọn xem trước:</label>
+                    <div class="d-flex flex-wrap gap-2" id="previewArea"></div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ghi chú ảnh (Tùy chọn)</label>
+                    <textarea th:field="*{diagnosticResult}" class="form-control" rows="2" placeholder="Ví dụ: Ảnh linh kiện cũ bị nứt vỡ trước khi thay..."></textarea>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-info text-white fw-bold btn-lg">
+                        <i class="bi bi-cloud-upload"></i> Tải Lên Ảnh
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Hàm preview danh sách ảnh đã chọn
+    function previewImages(event) {
+        const previewContainer = document.getElementById('previewContainer');
+        const previewArea = document.getElementById('previewArea');
+        previewArea.innerHTML = '';
+
+        const files = event.target.files;
+        if (files.length > 0) {
+            previewContainer.style.display = 'block';
+            Array.from(files).forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.className = 'image-preview';
+                        previewArea.appendChild(img);
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        } else {
+            previewContainer.style.display = 'none';
+        }
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

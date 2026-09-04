@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="[http://www.thymeleaf.org](http://www.thymeleaf.org)" lang="vi">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đặt Lịch Nâng Cấp & Độ Xe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-dark text-white p-4">
+                    <h4 class="fw-bold mb-1 text-warning"><i class="fa-solid fa-gauge-high me-2"></i> ĐẶT LỊCH NÂNG CẤP XE</h4>
+                    <p class="mb-0 text-white-50">Điền thông tin bên dưới để xưởng chuẩn bị linh kiện độ xe cho bạn</p>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Bổ sung annotation gợi ý kiểu dữ liệu cho IntelliJ ở ngay trước form -->
+                    <!--/*@thymesVar id="tuningAppointmentRequest" type="com.garage.tuning.dto.TuningAppointmentRequest"*/-->
+                    <!-- Khai báo kiểu dữ liệu cho IntelliJ Intellisense -->
+                    <!--/*@thymesVar id="tuningAppointmentRequest" type="com.garage.tuning.dto.TuningAppointmentRequest"*/-->
+
+                    <form th:action="@{/tuning/booking}"
+                          th:object="${tuningAppointmentRequest}"
+                          method="post">
+
+                        <input type="hidden" name="serviceId" th:value="${selectedServiceId}" />
+
+                        <!-- Họ và tên -->
+                        <div class="mb-3">
+                            <label for="customerName" class="form-label fw-bold">Họ và Tên <span class="text-danger">*</span></label>
+                            <input type="text" id="customerName" class="form-control" th:field="*{customerName}" placeholder="Nhập họ và tên" required>
+                            <div class="text-danger small" th:if="${#fields.hasErrors('customerName')}" th:errors="*{customerName}"></div>
+                        </div>
+
+                        <!-- Số điện thoại -->
+                        <div class="mb-3">
+                            <label for="phone" class="form-label fw-bold">Số Điện Thoại <span class="text-danger">*</span></label>
+                            <input type="tel" id="phone" class="form-control" th:field="*{phone}" placeholder="Nhập số điện thoại" required>
+                            <div class="text-danger small" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+                        </div>
+
+                        <!-- Thông tin xe -->
+                        <div class="mb-3">
+                            <label for="vehicleInfo" class="form-label fw-bold">Thông Tin Xe & Biển Số <span class="text-danger">*</span></label>
+                            <input type="text" id="vehicleInfo" class="form-control" th:field="*{vehicleInfo}" placeholder="VD: Honda SH 150i - 29A1-123.45" required>
+                            <div class="text-danger small" th:if="${#fields.hasErrors('vehicleInfo')}" th:errors="*{vehicleInfo}"></div>
+                        </div>
+
+                        <!-- Ngày giờ hẹn -->
+                        <div class="mb-3">
+                            <label for="appointmentDate" class="form-label fw-bold">Thời Gian Hẹn <span class="text-danger">*</span></label>
+                            <input type="datetime-local" id="appointmentDate" class="form-control" th:field="*{appointmentDate}" required>
+                            <div class="text-danger small" th:if="${#fields.hasErrors('appointmentDate')}" th:errors="*{appointmentDate}"></div>
+                        </div>
+
+                        <!-- Ghi chú -->
+                        <div class="mb-4">
+                            <label for="note" class="form-label fw-bold">Ghi Chú Yêu Cầu</label>
+                            <textarea id="note" class="form-control" th:field="*{note}" rows="3" placeholder="Mô tả gói độ/phụ tùng..."></textarea>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-warning btn-lg fw-bold py-3">
+                                <i class="fa-solid fa-paper-plane me-2"></i> XÁC NHẬN ĐẶT LỊCH
+                            </button>
+                            <a href="/tuning" class="btn btn-outline-secondary">Quay lại</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

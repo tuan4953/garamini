@@ -1,0 +1,1311 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Thông tin cá nhân - Gara Xe Máy</title>
+
+    <!-- Bootstrap -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+            rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link
+            href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+            rel="stylesheet">
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+
+            background: #f5f6f8;
+
+            font-family:
+                    Arial,
+                    Helvetica,
+                    sans-serif;
+
+            color: #222;
+        }
+
+
+        /* =====================================================
+           KHU VỰC TRỐNG PHÍA TRÊN
+
+           Bạn đã thống nhất tự thiết kế khu vực Header.
+           ===================================================== */
+
+        .account-space {
+
+            height: 80px;
+
+            background: #ffffff;
+
+        }
+
+
+        /* =====================================================
+           NAVBAR
+           ===================================================== */
+
+        .main-navbar {
+
+            background: #ffffff;
+
+            border-bottom:
+                    1px solid #e6e6e6;
+
+            box-shadow:
+                    0 2px 8px
+                    rgba(0, 0, 0, 0.05);
+
+            position: relative;
+
+            z-index: 1000;
+        }
+
+
+        .navbar-container {
+
+            max-width: 1200px;
+
+            min-height: 64px;
+
+            margin: auto;
+
+            padding:
+                    0 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+        }
+
+
+        .logo {
+
+            color: #111;
+
+            text-decoration: none;
+
+            font-size: 20px;
+
+            font-weight: 700;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+        }
+
+
+        .nav-menu {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            margin: 0;
+
+            padding: 0;
+
+            list-style: none;
+        }
+
+
+        .nav-menu a {
+
+            color: #333;
+
+            text-decoration: none;
+
+            padding:
+                    10px 12px;
+
+            border-radius: 8px;
+
+            font-size: 14px;
+        }
+
+
+        .nav-menu a:hover {
+
+            background: #f1f2f4;
+        }
+
+
+        /* =====================================================
+           USER MENU
+           ===================================================== */
+
+        .user-menu {
+
+            position: relative;
+        }
+
+
+        .user-button {
+
+            border: none;
+
+            background: transparent;
+
+            padding: 7px 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            cursor: pointer;
+
+            border-radius: 8px;
+        }
+
+
+        .user-button:hover {
+
+            background: #f1f2f4;
+        }
+
+
+        .avatar-small {
+
+            width: 36px;
+
+            height: 36px;
+
+            border-radius: 50%;
+
+            background: #eeeeee;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+        }
+
+
+        .user-dropdown {
+
+            position: absolute;
+
+            top:
+                    calc(100% + 8px);
+
+            right: 0;
+
+            width: 220px;
+
+            padding: 8px;
+
+            background: white;
+
+            border:
+                    1px solid #e5e5e5;
+
+            border-radius: 10px;
+
+            box-shadow:
+                    0 8px 25px
+                    rgba(0, 0, 0, 0.12);
+
+            z-index: 9999;
+
+            display: none;
+        }
+
+
+        .user-menu:hover .user-dropdown {
+
+            display: block;
+        }
+
+
+        .user-dropdown a {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            padding: 10px 12px;
+
+            color: #333;
+
+            text-decoration: none;
+
+            border-radius: 7px;
+        }
+
+
+        .user-dropdown a:hover {
+
+            background: #f4f4f4;
+        }
+
+
+        .dropdown-divider {
+
+            height: 1px;
+
+            background: #eeeeee;
+
+            margin: 6px 0;
+        }
+
+
+        /* =====================================================
+           MAIN
+           ===================================================== */
+
+        .profile-container {
+
+            max-width: 1100px;
+
+            margin:
+                    0 auto;
+
+            padding:
+                    35px 20px 60px;
+        }
+
+
+        /* =====================================================
+           PROFILE HERO
+           ===================================================== */
+
+        .profile-card {
+
+            background: #ffffff;
+
+            border-radius: 16px;
+
+            overflow: hidden;
+
+            border:
+                    1px solid #e8e8e8;
+
+            box-shadow:
+                    0 5px 20px
+                    rgba(0, 0, 0, 0.05);
+        }
+
+
+        .profile-cover {
+
+            height: 150px;
+
+            background:
+                    linear-gradient(
+                            135deg,
+                            #212529,
+                            #495057
+                    );
+
+            position: relative;
+        }
+
+
+        .profile-main {
+
+            padding:
+                    0 35px 30px;
+        }
+
+
+        .profile-avatar {
+
+            width: 110px;
+
+            height: 110px;
+
+            border-radius: 50%;
+
+            background: #ffffff;
+
+            border:
+                    5px solid #ffffff;
+
+            box-shadow:
+                    0 3px 12px
+                    rgba(0, 0, 0, 0.15);
+
+            margin-top: -55px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 42px;
+
+            color: #555;
+
+            position: relative;
+        }
+
+
+        .profile-header {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-end;
+
+            gap: 20px;
+        }
+
+
+        .profile-name {
+
+            margin-top: 12px;
+        }
+
+
+        .profile-name h1 {
+
+            font-size: 28px;
+
+            font-weight: 700;
+
+            margin-bottom: 6px;
+        }
+
+
+        .profile-email {
+
+            color: #777;
+
+            font-size: 14px;
+        }
+
+
+        .account-status {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 6px;
+
+            padding:
+                    6px 11px;
+
+            border-radius: 20px;
+
+            background: #eaf8ef;
+
+            color: #198754;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        /* =====================================================
+           THÔNG TIN NHANH
+           ===================================================== */
+
+        .stats {
+
+            display: grid;
+
+            grid-template-columns:
+                    repeat(3, 1fr);
+
+            gap: 15px;
+
+            margin-top: 25px;
+        }
+
+
+        .stat-card {
+
+            background: #f8f9fa;
+
+            border:
+                    1px solid #eeeeee;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            text-align: center;
+        }
+
+
+        .stat-icon {
+
+            font-size: 22px;
+
+            margin-bottom: 8px;
+        }
+
+
+        .stat-number {
+
+            font-size: 23px;
+
+            font-weight: 700;
+
+            margin-bottom: 3px;
+        }
+
+
+        .stat-title {
+
+            color: #777;
+
+            font-size: 13px;
+        }
+
+
+        /* =====================================================
+           CONTENT GRID
+           ===================================================== */
+
+        .content-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                    1fr 1fr;
+
+            gap: 20px;
+
+            margin-top: 20px;
+        }
+
+
+        .info-card {
+
+            background: #ffffff;
+
+            border:
+                    1px solid #e8e8e8;
+
+            border-radius: 14px;
+
+            padding: 25px;
+
+            box-shadow:
+                    0 3px 15px
+                    rgba(0, 0, 0, 0.04);
+        }
+
+
+        .info-title {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 10px;
+
+            margin-bottom: 22px;
+
+            padding-bottom: 14px;
+
+            border-bottom:
+                    1px solid #eeeeee;
+        }
+
+
+        .info-title i {
+
+            font-size: 20px;
+        }
+
+
+        .info-title h2 {
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            margin: 0;
+        }
+
+
+        .info-row {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            padding:
+                    12px 0;
+
+            border-bottom:
+                    1px solid #f0f0f0;
+        }
+
+
+        .info-row:last-child {
+
+            border-bottom: none;
+        }
+
+
+        .info-label {
+
+            color: #777;
+
+            font-size: 14px;
+        }
+
+
+        .info-value {
+
+            text-align: right;
+
+            font-size: 14px;
+
+            font-weight: 600;
+
+            max-width: 60%;
+
+            word-break: break-word;
+        }
+
+
+        /* =====================================================
+           ACTION
+           ===================================================== */
+
+        .profile-actions {
+
+            margin-top: 20px;
+
+            background: #ffffff;
+
+            border:
+                    1px solid #e8e8e8;
+
+            border-radius: 14px;
+
+            padding: 20px;
+
+            display: flex;
+
+            justify-content: flex-end;
+
+            gap: 10px;
+        }
+
+
+        /* =====================================================
+           EDIT FORM
+           ===================================================== */
+
+        .edit-section {
+
+            margin-top: 20px;
+
+            background: #ffffff;
+
+            border:
+                    1px solid #e8e8e8;
+
+            border-radius: 14px;
+
+            padding: 25px;
+        }
+
+
+        .edit-title {
+
+            margin-bottom: 20px;
+        }
+
+
+        .edit-title h2 {
+
+            font-size: 20px;
+
+            font-weight: 700;
+
+            margin-bottom: 5px;
+        }
+
+
+        .edit-title p {
+
+            color: #777;
+
+            font-size: 14px;
+
+            margin: 0;
+        }
+
+
+        /* =====================================================
+           MOBILE
+           ===================================================== */
+
+        @media (max-width: 800px) {
+
+            .navbar-container {
+
+                flex-wrap: wrap;
+
+                padding:
+                        10px 15px;
+            }
+
+
+            .nav-menu {
+
+                width: 100%;
+
+                overflow-x: auto;
+
+                padding-top: 8px;
+            }
+
+
+            .profile-main {
+
+                padding:
+                        0 20px 25px;
+            }
+
+
+            .profile-header {
+
+                align-items: flex-start;
+
+                flex-direction: column;
+            }
+
+
+            .stats {
+
+                grid-template-columns:
+                        1fr;
+            }
+
+
+            .content-grid {
+
+                grid-template-columns:
+                        1fr;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .account-space {
+
+                height: 60px;
+            }
+
+
+            .profile-container {
+
+                padding:
+                        20px 12px 40px;
+            }
+
+
+            .profile-cover {
+
+                height: 120px;
+            }
+
+
+            .profile-avatar {
+
+                width: 90px;
+
+                height: 90px;
+
+                margin-top: -45px;
+
+                font-size: 35px;
+            }
+
+
+            .profile-name h1 {
+
+                font-size: 23px;
+            }
+
+
+            .info-card {
+
+                padding: 18px;
+            }
+
+
+            .info-row {
+
+                flex-direction: column;
+
+                gap: 5px;
+            }
+
+
+            .info-value {
+
+                text-align: left;
+
+                max-width: 100%;
+            }
+
+
+            .profile-actions {
+
+                flex-direction: column;
+            }
+
+
+            .profile-actions .btn {
+
+                width: 100%;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+
+<!-- ==========================================================
+     PROFILE
+     ========================================================== -->
+
+<main class="profile-container">
+
+
+    <!-- ======================================================
+         PROFILE HEADER
+         ====================================================== -->
+
+    <section class="profile-card">
+
+
+        <div class="profile-cover"></div>
+
+
+        <div class="profile-main">
+
+
+            <div class="profile-avatar">
+
+                <i class="bi bi-person"></i>
+
+            </div>
+
+
+            <div class="profile-header">
+
+
+                <div class="profile-name">
+
+                    <h1
+                            th:text="${user.fullName}">
+                        Nguyễn Văn A
+                    </h1>
+
+
+                    <div class="profile-email">
+
+                        <i class="bi bi-envelope me-1"></i>
+
+                        <span
+                                th:text="${user.email}">
+                            user@gmail.com
+                        </span>
+
+                    </div>
+
+                </div>
+
+
+                <div>
+
+                    <span class="account-status">
+
+                        <i class="bi bi-check-circle-fill"></i>
+
+                        Tài khoản đang hoạt động
+
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- ==================================================
+                 THỐNG KÊ
+                 ================================================== -->
+
+            <div class="stats">
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        <i class="bi bi-bicycle"></i>
+
+                    </div>
+
+                    <div class="stat-number">
+
+                        <span
+                                th:text="${vehicleCount != null ? vehicleCount : 0}">
+                            0
+                        </span>
+
+                    </div>
+
+                    <div class="stat-title">
+                        Xe của tôi
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        <i class="bi bi-calendar-check"></i>
+
+                    </div>
+
+                    <div class="stat-number">
+
+                        <span
+                                th:text="${appointmentCount != null ? appointmentCount : 0}">
+                            0
+                        </span>
+
+                    </div>
+
+                    <div class="stat-title">
+                        Lịch hẹn
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div class="stat-icon">
+
+                        <i class="bi bi-wrench-adjustable"></i>
+
+                    </div>
+
+                    <div class="stat-number">
+
+                        <span
+                                th:text="${repairCount != null ? repairCount : 0}">
+                            0
+                        </span>
+
+                    </div>
+
+                    <div class="stat-title">
+                        Lần sửa chữa
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ======================================================
+         THÔNG TIN
+         ====================================================== -->
+
+    <section class="content-grid">
+
+
+        <!-- THÔNG TIN CÁ NHÂN -->
+
+        <div class="info-card">
+
+
+            <div class="info-title">
+
+                <i class="bi bi-person-vcard"></i>
+
+                <h2>
+                    Thông tin cá nhân
+                </h2>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Họ và tên
+                </span>
+
+                <span class="info-value"
+                      th:text="${user.fullName}">
+                    Nguyễn Văn A
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Số điện thoại
+                </span>
+
+                <span class="info-value"
+                      th:text="${user.phone}">
+                    0900000000
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Địa chỉ
+                </span>
+
+                <span class="info-value"
+                      th:text="${user.address}">
+                    Hà Nội
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+
+        <!-- THÔNG TIN TÀI KHOẢN -->
+
+        <div class="info-card">
+
+
+            <div class="info-title">
+
+                <i class="bi bi-shield-check"></i>
+
+                <h2>
+                    Thông tin tài khoản
+                </h2>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Email
+                </span>
+
+                <span class="info-value"
+                      th:text="${user.email}">
+                    user@gmail.com
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Vai trò
+                </span>
+
+                <span class="info-value">
+                    Khách hàng
+                </span>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <span class="info-label">
+                    Trạng thái
+                </span>
+
+                <span class="info-value text-success">
+
+                    <i class="bi bi-check-circle-fill me-1"></i>
+
+                    Đang hoạt động
+
+                </span>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- ======================================================
+         CÁC THAO TÁC
+         ====================================================== -->
+
+    <section class="profile-actions">
+
+
+        <a th:href="@{/}"
+           class="btn btn-outline-secondary">
+
+            <i class="bi bi-arrow-left me-1"></i>
+
+            Trang chủ
+
+        </a>
+
+
+        <a th:href="@{/customer/change-password}"
+           class="btn btn-outline-dark">
+
+            <i class="bi bi-key me-1"></i>
+
+            Đổi mật khẩu
+
+        </a>
+
+
+        <button
+                type="button"
+                class="btn btn-dark"
+                data-bs-toggle="collapse"
+                data-bs-target="#editProfile">
+
+            <i class="bi bi-pencil-square me-1"></i>
+
+            Chỉnh sửa thông tin
+
+        </button>
+
+
+    </section>
+
+
+
+    <!-- ======================================================
+         FORM CHỈNH SỬA
+
+         Mặc định đóng.
+         Click "Chỉnh sửa thông tin" mới mở.
+         ====================================================== -->
+
+    <section id="editProfile"
+             class="edit-section collapse">
+
+
+        <div class="edit-title">
+
+            <h2>
+                Chỉnh sửa thông tin
+            </h2>
+
+            <p>
+                Cập nhật thông tin cá nhân của bạn.
+            </p>
+
+        </div>
+
+
+        <form th:action="@{/profile/update}"
+              method="post">
+
+
+            <!-- EMAIL -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+                    Email
+                </label>
+
+                <input
+                        type="email"
+                        class="form-control"
+                        th:value="${user.email}"
+                        readonly>
+
+                <div class="form-text">
+                    Email tài khoản không thể thay đổi.
+                </div>
+
+            </div>
+
+
+            <!-- HỌ TÊN -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+
+                    Họ và tên
+
+                    <span class="text-danger">
+                        *
+                    </span>
+
+                </label>
+
+                <input
+                        type="text"
+                        name="fullName"
+                        class="form-control"
+                        th:value="${user.fullName}"
+                        required>
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+
+                    Số điện thoại
+
+                    <span class="text-danger">
+                        *
+                    </span>
+
+                </label>
+
+                <input
+                        type="tel"
+                        name="phone"
+                        class="form-control"
+                        th:value="${user.phone}"
+                        required>
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="mb-3">
+
+                <label class="form-label fw-semibold">
+
+                    Địa chỉ
+
+                </label>
+
+                <textarea
+                        name="address"
+                        class="form-control"
+                        rows="3"
+                        th:text="${user.address}"></textarea>
+
+            </div>
+
+
+            <div class="d-flex justify-content-end gap-2">
+
+
+                <button
+                        type="button"
+                        class="btn btn-light"
+                        data-bs-toggle="collapse"
+                        data-bs-target="#editProfile">
+
+                    Hủy
+
+                </button>
+
+
+                <button
+                        type="submit"
+                        class="btn btn-dark">
+
+                    <i class="bi bi-check-lg me-1"></i>
+
+                    Lưu thay đổi
+
+                </button>
+
+
+            </div>
+
+
+        </form>
+
+    </section>
+
+
+</main>
+
+
+<div th:replace="~{fragments/footer}"></div>
+<!-- Bootstrap JS -->
+
+<script
+        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+</script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Biên Bản Nghiệm Thu & Bàn Giao Xe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+
+<div class="container py-4" style="max-width: 700px;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-box-arrow-up-right text-success"></i> Nghiệm Thu & Bàn Giao Xe</h2>
+        <a th:href="@{/technician/assigned-jobs}" class="btn btn-outline-secondary btn-sm">&larr; Quay lại</a>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <form th:action="@{/technician/handover}" th:object="${handoverRequest}" method="post">
+
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Mã / ID Xe (*)</label>
+                        <input type="number" th:field="*{vehicleId}" class="form-control" placeholder="Nhập ID Xe" required>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Mã KTV Bàn Giao</label>
+                        <input type="number" th:field="*{technicianId}" class="form-control" placeholder="Nhập ID KTV">
+                    </div>
+                </div>
+
+                <!-- Tình trạng tiến độ mặc định 100% -->
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Trạng Thái Sửa Chữa</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-success text-white"><i class="bi bi-check-circle-fill"></i></span>
+                        <input type="text" class="form-control fw-bold text-success" value="Đã hoàn thành 100% công việc" readonly>
+                    </div>
+                    <input type="hidden" th:field="*{progress}" value="100">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Nội dung đã hoàn thành / Kết quả chạy thử</label>
+                    <textarea th:field="*{diagnosticResult}" class="form-control" rows="3" placeholder="Ví dụ: Đã chạy thử 5km, động cơ hoạt động êm ái, hệ thống phanh đạt chuẩn..."></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Ghi chú & Khuyến cáo khi bàn giao</label>
+                    <textarea th:field="*{initialCondition}" class="form-control" rows="3" placeholder="Ví dụ: Dặn khách kiểm tra lại nước làm mát sau 1.000 km, hẹn lịch bảo dưỡng tiếp theo..."></textarea>
+                </div>
+
+                <div class="form-check mb-4">
+                    <input class="form-check-input" type="checkbox" id="confirmCheck" required>
+                    <label class="form-check-label text-muted" for="confirmCheck">
+                        Xác nhận đã vệ sinh xe, kiểm tra đầy đủ dụng cụ và sẵn sàng bàn giao cho Cố vấn dịch vụ / Khách hàng.
+                    </label>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-success btn-lg fw-bold">
+                        <i class="bi bi-check2-all"></i> Xác Nhận Bàn Giao Xe
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

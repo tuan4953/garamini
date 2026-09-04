@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản Lý Lịch Hẹn - Admin</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
+</head>
+<body>
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+
+    <div class="container-fluid p-4">
+        <h2>Quản Lý Lịch Hẹn Khách Hàng</h2>
+
+        <div th:replace="~{fragments/alert :: alert}"></div>
+
+        <!-- Bộ lọc & Tìm kiếm -->
+        <form th:action="@{/admin/appointments}" method="get" class="row g-3 mb-4">
+            <div class="col-md-4">
+                <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tìm tên, SĐT khách, biển số...">
+            </div>
+            <div class="col-md-3">
+                <select name="status" class="form-select">
+                    <option value="">-- Tất cả trạng thái --</option>
+                    <option th:each="st : ${statuses}"
+                            th:value="${st}"
+                            th:text="${st}"
+                            th:selected="${st == selectedStatus}">
+                    </option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Lọc Lịch Hẹn</button>
+            </div>
+        </form>
+
+        <table class="table table-bordered table-hover shadow-sm align-middle">
+            <thead class="table-dark">
+            <tr>
+                <th>Mã Lịch</th>
+                <th>Khách Hàng</th>
+                <th>Số Điện Thoại</th>
+                <th>Biển Số Xe</th>
+                <th>Thời Gian Hẹn</th>
+                <th>Trạng Thái</th>
+                <th>Thao Tác</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="app : ${appointmentPage.content}">
+                <td th:text="'#APT-' + ${app.id}">#1</td>
+                <td th:text="${app.customerName}">Nguyễn Văn A</td>
+                <td th:text="${app.customerPhone}">0987654321</td>
+                <td th:text="${app.licensePlate}" class="fw-bold">29A1-12345</td>
+                <td th:text="${#temporals.format(app.appointmentDate, 'dd/MM/yyyy HH:mm')}">20/08/2026 14:00</td>
+                <td>
+                    <span th:if="${app.status.name() == 'PENDING'}" class="badge bg-warning text-dark">PENDING</span>
+                    <span th:if="${app.status.name() == 'CONFIRMED'}" class="badge bg-info">CONFIRMED</span>
+                    <span th:if="${app.status.name() == 'IN_PROGRESS'}" class="badge bg-primary">IN_PROGRESS</span>
+                    <span th:if="${app.status.name() == 'COMPLETED'}" class="badge bg-success">COMPLETED</span>
+                    <span th:if="${app.status.name() == 'CANCELLED'}" class="badge bg-danger">CANCELLED</span>
+                </td>
+                <td>
+                    <a th:href="@{/admin/appointments/edit/{id}(id=${app.id})}" class="btn btn-sm btn-warning">Cập nhật</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <!-- Phân trang -->
+        <div th:replace="~{fragments/pagination :: pagination}"></div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

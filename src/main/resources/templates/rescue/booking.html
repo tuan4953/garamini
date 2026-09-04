@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yêu Cầu Cứu Hộ Khẩn Cấp</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card shadow-lg border-0 rounded-3">
+                <div class="card-header bg-danger text-white p-3 text-center">
+                    <h4 class="mb-0 fw-bold"><i class="fa-solid fa-truck-medical me-2"></i> GỬI YÊU CẦU CỨU HỘ KHẨN CẤP</h4>
+                </div>
+                <div class="card-body p-4">
+
+                    <!-- Thông báo thành công / thất bại -->
+                    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+                    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+                    <form th:action="@{/rescue/booking}" method="post" th:object="${rescueBooking}">
+
+                        <!-- Chọn Loại Dịch Vụ -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Loại Dịch Vụ Cứu Hộ <span class="text-danger">*</span></label>
+                            <select class="form-select" name="serviceId" required>
+                                <option value="">-- Chọn dịch vụ cứu hộ --</option>
+                                <option th:each="srv : ${rescueServices}"
+                                        th:value="${srv?.id}"
+                                        th:text="${srv?.name}"
+                                        th:selected="${srv?.id == selectedServiceId}">Gói cứu hộ</option>
+                            </select>
+                        </div>
+
+                        <div class="row">
+                            <!-- Họ tên -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Họ và Tên <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="customerName" placeholder="Nguyễn Văn A" required>
+                            </div>
+                            <!-- Số điện thoại -->
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Số Điện Thoại Nhận Cứu Hộ <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" name="phoneNumber" placeholder="0901234567" required>
+                            </div>
+                        </div>
+
+                        <!-- Biển số xe & Bảng hiệu xe -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Biển Số Xe <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="licensePlate" placeholder="30F-123.45" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Dòng Xe / Hãng Xe</label>
+                                <input type="text" class="form-control" name="carModel" placeholder="VD: Mazda 3, Ford Ranger...">
+                            </div>
+                        </div>
+
+                        <!-- Địa điểm gặp sự cố -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Địa Chỉ / Vị Trí Hiện Tại <span class="text-danger">*</span></label>
+                            <textarea class="form-control" name="location" rows="2" placeholder="Ghi rõ vị trí hiện tại của xe (Số nhà, đường, đoạn cao tốc...)" required></textarea>
+                        </div>
+
+                        <!-- Mô tả sự cố -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Mô Tả Tình Trạng Sự Cố</label>
+                            <textarea class="form-control" name="note" rows="3" placeholder="Mô tả hiện tượng: Xe chết máy, hết bình, nổ lốp, va chạm..."></textarea>
+                        </div>
+
+                        <!-- Nút bấm gửi yêu cầu -->
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-danger btn-lg fw-bold">
+                                <i class="fa-solid fa-paper-plane me-2"></i> GỬI YÊU CẦU CỨU HỘ NGAY
+                            </button>
+                            <a th:href="@{/rescue/list}" class="btn btn-outline-secondary">Hủy bỏ / Quay lại</a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

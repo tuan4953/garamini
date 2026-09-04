@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Danh Sách Phụ Tùng - Garage Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-primary fw-bold">DANH SÁCH PHỤ TÙNG & LINH KIỆN</h2>
+
+    <div class="row">
+        <!-- Lặp qua danh sách phụ tùng từ Controller -->
+        <div class="col-md-4 mb-4" th:each="part : ${spareParts}">
+            <div class="card h-100 shadow-sm border-0">
+                <div class="card-body">
+                    <span class="badge bg-secondary mb-2" th:text="${part.partCode != null ? part.partCode : 'Phụ tùng'}">SKU-001</span>
+                    <h5 class="card-title text-dark fw-bold" th:text="${part.name}">Tên Phụ Tùng</h5>
+                    <p class="card-text text-muted text-truncate" th:text="${part.description}">Mô tả ngắn gọn phụ tùng...</p>
+
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="fw-bold text-danger fs-5"
+                                  th:text="${#numbers.formatDecimal(part.price, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'">0 VNĐ</span>
+
+                        <span class="badge bg-success" th:if="${part.stockQuantity == null || part.stockQuantity > 0}">
+                                Còn hàng (<span th:text="${part.stockQuantity != null ? part.stockQuantity : 'N/A'}">10</span>)
+                            </span>
+                        <span class="badge bg-danger" th:if="${part.stockQuantity != null && part.stockQuantity <= 0}">Hết hàng</span>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0 pb-3">
+                    <a th:href="@{/spare-parts/{id}(id=${part.id})}" class="btn btn-outline-primary w-100">
+                        <i class="fa-solid fa-eye me-1"></i> Xem chi tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Trường hợp danh sách trống -->
+        <div th:if="${#lists.isEmpty(spareParts)}" class="col-12 text-center py-5">
+            <p class="text-muted fs-5">Hiện chưa có phụ tùng nào trong kho.</p>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

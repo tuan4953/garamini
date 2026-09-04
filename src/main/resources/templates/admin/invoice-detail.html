@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chi Tiết Hóa Đơn</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body>
+
+<div class="d-flex">
+    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+
+    <div class="container-fluid p-4">
+        <a th:href="@{/admin/invoices}" class="btn btn-outline-secondary mb-3">&larr; Quay lại</a>
+
+        <div th:replace="~{fragments/alert :: alert}"></div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>Hóa Đơn <span th:text="${'#INV-' + invoice.id}"></span></h3>
+            </div>
+            <div class="card-body">
+                <p><strong>Ngày phát hành:</strong> <span th:text="${#temporals.format(invoice.issuedAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+                <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(invoice.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
+
+                <!-- Sửa 1 & 2: Đổi invoice.status thành invoice.paymentStatus + Thêm Badge màu sắc -->
+                <p><strong>Trạng thái:</strong>
+                    <span class="badge bg-success"
+                          th:if="${invoice.paymentStatus?.name() == 'PAID'}">Đã thanh toán</span>
+                    <span class="badge bg-warning text-dark"
+                          th:if="${invoice.paymentStatus?.name() == 'UNPAID'}">Chưa thanh toán</span>
+                    <span class="badge bg-secondary"
+                          th:if="${invoice.paymentStatus?.name() != 'PAID' && invoice.paymentStatus?.name() != 'UNPAID'}"
+                          th:text="${invoice.paymentStatus}">Khác</span>
+                </p>
+
+                <!-- Sửa 3: Đổi điều kiện kiểm tra từ invoice.status?.name() thành invoice.paymentStatus?.name() -->
+                <div th:if="${invoice.paymentStatus?.name() != 'PAID'}" class="mt-4 p-3 bg-light rounded border">
+                    <h5>Xác nhận thanh toán</h5>
+                    <form th:action="@{/admin/invoices/{id}/pay(id=${invoice.id})}" method="post" class="row g-2">
+                        <div class="col-auto">
+                            <select name="paymentMethod" class="form-select" required>
+                                <option value="CASH">Tiền mặt</option>
+                                <option value="BANK_TRANSFER">Chuyển khoản</option>
+                            </select>
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-success">Xác nhận đã thu tiền</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

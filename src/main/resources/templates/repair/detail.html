@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi Tiết Sửa Chữa</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container my-5">
+  <div class="card shadow p-4">
+    <h3 class="text-primary">Phiếu Sửa Chữa: <span th:text="${repair.orderCode}"></span></h3>
+    <hr>
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <p><strong>Biển Số Xe:</strong> <span th:text="${repair.licensePlate}"></span></p>
+        <p><strong>Dòng Xe:</strong> <span th:text="${repair.vehicleModel}"></span></p>
+        <p><strong>Khách Hàng:</strong> <span th:text="${repair.customerName}"></span> - <span th:text="${repair.customerPhone}"></span></p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>Trạng Thái:</strong> <span class="badge bg-warning text-dark" th:text="${repair.status}"></span></p>
+        <p><strong>Kỹ Thuật Viên:</strong> <span th:text="${repair.technicianName}"></span></p>
+        <p><strong>Ngày Tiếp Nhận:</strong> <span th:text="${#temporals.format(repair.createdAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+      </div>
+    </div>
+
+    <h5 class="mt-3">Danh Mục Phụ Tùng & Dịch Vụ</h5>
+    <table class="table table-bordered">
+      <thead>
+      <tr>
+        <th>Tên Hạng Mục</th>
+        <th>Phân Loại</th>
+        <th>Số Lượng</th>
+        <th>Đơn Giá</th>
+        <th>Thành Tiền</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${repair.items}">
+        <td th:text="${item.itemName}"></td>
+        <td th:text="${item.type}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+        <td th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+      </tr>
+      </tbody>
+    </table>
+    <div class="text-end me-3 fs-4 text-danger fw-bold">
+      Tổng Cộng: <span th:text="${#numbers.formatDecimal(repair.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+    </div>
+  </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

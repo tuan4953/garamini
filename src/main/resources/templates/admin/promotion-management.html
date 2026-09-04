@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản lý Khuyến mãi - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container-fluid py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark"><i class="fas fa-tags me-2 text-primary"></i>Quản lý Khuyến mãi & Mã giảm giá</h3>
+        <a th:href="@{/admin/promotions/create}" class="btn btn-primary fw-bold">
+            <i class="fas fa-plus me-1"></i> Tạo mã khuyến mãi
+        </a>
+    </div>
+
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <span th:text="${successMessage}"></span>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>Mã Code</th>
+                        <th>Tiêu đề</th>
+                        <th>Mức giảm</th>
+                        <th>Thời gian áp dụng</th>
+                        <th>Trạng thái</th>
+                        <th class="text-center">Thao tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${promotions}">
+                        <td><span class="badge bg-secondary fs-6" th:text="${p.code}">CODE</span></td>
+                        <td class="fw-bold" th:text="${p.title}">Tiêu đề</td>
+                        <td>
+                            <span th:if="${p.discountPercent != null}" th:text="${p.discountPercent} + '%'"></span>
+                            <span th:if="${p.discountAmount != null}" th:text="${#numbers.formatDecimal(p.discountAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+                        </td>
+                        <td>
+                            <small th:text="${#temporals.format(p.startDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(p.endDate, 'dd/MM/yyyy')}"></small>
+                        </td>
+                        <td>
+                            <span th:if="${p.active}" class="badge bg-success">Đang bật</span>
+                            <span th:if="${!p.active}" class="badge bg-danger">Tắt</span>
+                        </td>
+                        <td class="text-center">
+                            <a th:href="@{'/admin/promotions/edit/' + ${p.id}}" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form th:action="@{'/admin/promotions/toggle-status/' + ${p.id}}" method="POST" class="d-inline me-1">
+                                <button type="submit" class="btn btn-sm btn-outline-warning">
+                                    <i th:class="${p.active ? 'fas fa-eye-slash' : 'fas fa-eye'}"></i>
+                                </button>
+                            </form>
+                            <form th:action="@{'/admin/promotions/delete/' + ${p.id}}" method="POST" class="d-inline" onclick="return confirm('Bạn chắc chắn muốn xóa mã này?')">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Đăng ký - Motorbike Garage</title>
+
+</head>
+
+<body>
+
+<h1>Đăng ký tài khoản</h1>
+
+<div th:if="${registerError}">
+    <p style="color:red;"
+       th:text="${registerError}">
+    </p>
+</div>
+
+<form th:action="@{/register}"
+      th:object="${registerRequest}"
+      method="post">
+
+    <div>
+
+        <label>Họ và tên</label>
+
+        <input type="text"
+               th:field="*{fullName}">
+
+        <p style="color:red;"
+           th:errors="*{fullName}">
+        </p>
+
+    </div>
+
+    <div>
+
+        <label>Email</label>
+
+        <input type="email"
+               th:field="*{email}">
+
+        <p style="color:red;"
+           th:errors="*{email}">
+        </p>
+
+    </div>
+
+    <div>
+
+        <label>Số điện thoại</label>
+
+        <input type="text"
+               th:field="*{phone}">
+
+        <p style="color:red;"
+           th:errors="*{phone}">
+        </p>
+
+    </div>
+
+    <div>
+
+        <label>Mật khẩu</label>
+
+        <input type="password"
+               th:field="*{password}">
+
+        <p style="color:red;"
+           th:errors="*{password}">
+        </p>
+
+    </div>
+
+    <div>
+
+        <label>Xác nhận mật khẩu</label>
+
+        <input type="password"
+               th:field="*{confirmPassword}">
+
+        <p style="color:red;"
+           th:errors="*{confirmPassword}">
+        </p>
+
+    </div>
+
+    <button type="submit">
+        Đăng ký
+    </button>
+
+</form>
+
+<p>
+
+    Đã có tài khoản?
+
+    <a th:href="@{/login}">
+        Đăng nhập
+    </a>
+
+</p>
+
+</body>
+
+</html>

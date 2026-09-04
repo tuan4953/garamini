@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<!--
+  File: src/main/resources/templates/fragments/footer.html
+  Cách dùng ở layout khác:
+    <div th:replace="~{fragments/footer :: footer}"></div>
+-->
+<html lang="vi"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" th:href="@{/css/tride-layout.css}">
+</head>
+<body>
+
+<footer th:fragment="footer" class="site-footer">
+    <div class="footer-top">
+
+        <div class="footer-brand">
+            <a th:href="@{/}" class="navbar-logo"><i class="bi bi-tools"></i>T-<span class="accent">RIDE</span></a>
+            <p>Nền tảng chăm sóc và sửa chữa xe máy — đặt lịch, theo dõi tiến độ và quản lý toàn bộ vòng đời chiếc xe của bạn.</p>
+        </div>
+
+        <!-- ============ FOOTER: KHÁCH HÀNG ============ -->
+        <th:block sec:authorize="hasRole('CUSTOMER')">
+            <div class="footer-col">
+                <span class="footer-tag customer">Khách hàng</span>
+                <h4>Dịch vụ</h4>
+                <ul>
+                    <li><a th:href="@{/appointments/new}"><i class="bi bi-calendar-plus"></i> Đặt lịch sửa chữa</a></li>
+                    <li><a th:href="@{/rescue/booking}"><i class="bi bi-life-preserver"></i> Cứu hộ khẩn cấp</a></li>
+                    <li><a th:href="@{/services}"><i class="bi bi-list-check"></i> Bảng giá dịch vụ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Tài khoản của tôi</h4>
+                <ul>
+                    <li><a th:href="@{/customer/vehicles}"><i class="bi bi-bicycle"></i> Xe của tôi</a></li>
+                    <li><a th:href="@{/customer/invoices}"><i class="bi bi-receipt"></i> Hóa đơn &amp; thanh toán</a></li>
+                    <li><a th:href="@{/customer/warranty}"><i class="bi bi-shield-check"></i> Bảo hành</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Hỗ trợ</h4>
+                <ul>
+                    <li><a href="tel:19006868"><i class="bi bi-telephone"></i> Hotline 1900 6868</a></li>
+                    <li><a th:href="@{/faq}"><i class="bi bi-question-circle"></i> Câu hỏi thường gặp</a></li>
+                    <li><a th:href="@{/customer/reviews}"><i class="bi bi-star"></i> Gửi đánh giá</a></li>
+                </ul>
+            </div>
+        </th:block>
+
+        <!-- ============ FOOTER: KỸ THUẬT VIÊN ============ -->
+        <th:block sec:authorize="hasRole('TECHNICIAN')">
+            <div class="footer-col">
+                <span class="footer-tag ktv">Kỹ thuật viên</span>
+                <h4>Công việc</h4>
+                <ul>
+                    <li><a th:href="@{/technician/assigned-jobs}"><i class="bi bi-clipboard-check"></i> Công việc được giao</a></li>
+                    <li><a th:href="@{/technician/intake}"><i class="bi bi-car-front"></i> Tiếp nhận xe</a></li>
+                    <li><a th:href="@{/technician/history}"><i class="bi bi-clock-history"></i> Lịch sử công việc</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Quy trình</h4>
+                <ul>
+                    <li><a th:href="@{/technician/diagnosis}"><i class="bi bi-clipboard-pulse"></i> Chẩn đoán &amp; ghi chú</a></li>
+                    <li><a th:href="@{/technician/repair-proposal}"><i class="bi bi-tools"></i> Đề xuất phụ tùng</a></li>
+                    <li><a th:href="@{/technician/handover}"><i class="bi bi-check2-circle"></i> Bàn giao xe</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Nội bộ</h4>
+                <ul>
+                    <li><a href="tel:19006868"><i class="bi bi-telephone"></i> Đường dây kỹ thuật</a></li>
+                    <li><a th:href="@{/technician/sop}"><i class="bi bi-journal-text"></i> Quy trình chuẩn (SOP)</a></li>
+                </ul>
+            </div>
+        </th:block>
+
+        <!-- ============ FOOTER: QUẢN LÝ / ADMIN ============ -->
+        <th:block sec:authorize="hasRole('ADMIN')">
+            <div class="footer-col">
+                <span class="footer-tag admin">Quản lý</span>
+                <h4>Quản trị hệ thống</h4>
+                <ul>
+                    <li><a th:href="@{/admin/users}"><i class="bi bi-person-badge"></i> Tài khoản &amp; phân quyền</a></li>
+                    <li><a th:href="@{/admin/technicians}"><i class="bi bi-person-gear"></i> Kỹ thuật viên</a></li>
+                    <li><a th:href="@{/admin/spare-parts}"><i class="bi bi-box-seam"></i> Kho phụ tùng</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Vận hành &amp; tài chính</h4>
+                <ul>
+                    <li><a th:href="@{/admin/appointments}"><i class="bi bi-calendar-week"></i> Lịch hẹn &amp; phiếu sửa chữa</a></li>
+                    <li><a th:href="@{/admin/invoices}"><i class="bi bi-receipt"></i> Hóa đơn &amp; thanh toán</a></li>
+                    <li><a th:href="@{/admin/warranty}"><i class="bi bi-shield-check"></i> Bảo hành</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Báo cáo</h4>
+                <ul>
+                    <li><a th:href="@{/admin/reports}"><i class="bi bi-bar-chart-line"></i> Thống kê tổng quan</a></li>
+                    <li><a th:href="@{/admin/news}"><i class="bi bi-newspaper"></i> Nội dung &amp; đánh giá</a></li>
+                </ul>
+            </div>
+        </th:block>
+
+        <!-- ============ FOOTER: KHÁCH VÃNG LAI (chưa đăng nhập) ============ -->
+        <th:block sec:authorize="!isAuthenticated()">
+            <div class="footer-col">
+                <h4>Dịch vụ</h4>
+                <ul>
+                    <li><a th:href="@{/services}"><i class="bi bi-list-check"></i> Bảng giá dịch vụ</a></li>
+                    <li><a th:href="@{/tuning}"><i class="bi bi-speedometer2"></i> Độ xe</a></li>
+                    <li><a th:href="@{/rescue/booking}"><i class="bi bi-life-preserver"></i> Cứu hộ</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Về T-RIDE</h4>
+                <ul>
+                    <li><a th:href="@{/news}"><i class="bi bi-newspaper"></i> Tin tức</a></li>
+                    <li><a th:href="@{/promotions}"><i class="bi bi-gift"></i> Khuyến mãi</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Tài khoản</h4>
+                <ul>
+                    <li><a th:href="@{/login}"><i class="bi bi-box-arrow-in-right"></i> Đăng nhập</a></li>
+                </ul>
+            </div>
+        </th:block>
+
+    </div>
+
+    <div class="footer-bottom">
+        <span>© 2026 T-RIDE. Đã đăng ký bản quyền.</span>
+        <span class="footer-social">
+            <a href="#"><i class="bi bi-facebook"></i></a>
+            <a href="#"><i class="bi bi-instagram"></i></a>
+            <a href="#"><i class="bi bi-youtube"></i></a>
+            <a href="#"><i class="bi bi-tiktok"></i></a>
+        </span>
+    </div>
+</footer>
+
+</body>
+</html>

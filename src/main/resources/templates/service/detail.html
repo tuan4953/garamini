@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Dịch Vụ - Garage Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container py-5">
+    <!-- Nút quay lại -->
+    <div class="mb-4">
+        <a th:href="@{/services}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-2"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Cột thông tin chính -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <span class="badge bg-primary mb-2">Dịch Vụ Sửa Chữa & Bảo Dưỡng</span>
+                    <h2 class="card-title fw-bold text-dark mb-3" th:text="${service.name}">Tên Dịch Vụ</h2>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-circle-info text-primary me-2"></i>Mô tả chi tiết</h5>
+                    <p class="card-text text-secondary lh-lg" th:text="${service.description}">
+                        Mô tả chi tiết về quy trình và nội dung dịch vụ...
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột thông tin giá & Đặt lịch -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">Thông Tin Chi Phí</h5>
+
+                    <div class="d-flex align-items-baseline mb-4">
+                            <span class="fs-2 fw-bold text-danger me-2"
+                                  th:text="${#numbers.formatDecimal(service.price, 0, 'COMMA', 0, 'POINT')}">0</span>
+                        <span class="text-danger fw-bold fs-5">VNĐ</span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <a th:href="@{/appointments/booking(serviceId=${service.id})}" class="btn btn-success btn-lg">
+                            <i class="fa-solid fa-calendar-check me-2"></i>Đặt Lịch Dịch Vụ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

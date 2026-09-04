@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${(service?.name) ?: 'Chi Tiết Gói Độ Xe'} + ' - Garage Auto'">Chi Tiết Gói Độ Xe - Garage Auto</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+<!-- Nhúng Header dùng chung -->
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container my-5">
+  <!-- Nút quay lại -->
+  <a th:href="@{/tuning}" class="btn btn-outline-secondary mb-4">
+    <i class="fa-solid fa-arrow-left me-1"></i> Quay lại danh sách
+  </a>
+
+  <div class="row g-4">
+    <!-- Hình ảnh sản phẩm/dịch vụ -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+        <img th:src="${service?.imageUrl ?: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80'}"
+             class="img-fluid w-100" style="max-height: 400px; object-fit: cover;" alt="Gói độ xe">
+      </div>
+    </div>
+
+    <!-- Thông tin gói độ xe -->
+    <div class="col-lg-6">
+      <div class="card border-0 shadow-sm rounded-3 p-4">
+                    <span class="badge bg-warning text-dark fw-bold align-self-start mb-2"
+                          th:text="${service?.categoryName ?: 'Độ Xe & Nâng Cấp'}">Performance Tuning</span>
+
+        <h2 class="fw-bold text-dark mb-3" th:text="${service?.name ?: 'Tên Gói Độ Xe'}">Nâng Cấp Hệ Thống Pô On/Off Thể Thao</h2>
+
+        <h3 class="text-danger fw-bold mb-3"
+            th:text="${service?.price != null ? #numbers.formatDecimal(service.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Liên hệ báo giá'}">
+          15,000,000 VNĐ
+        </h3>
+
+        <p class="text-secondary mb-4" th:text="${service?.description ?: 'Mô tả chi tiết về sản phẩm, linh kiện nâng cấp, xuất xứ phụ tùng và ưu điểm sau khi lắp đặt trên xe.'}">
+          Mô tả chi tiết dịch vụ...
+        </p>
+
+        <!-- Danh sách cam kết/ưu điểm -->
+        <div class="bg-light p-3 rounded-3 mb-4">
+          <h6 class="fw-bold text-dark mb-2"><i class="fa-solid fa-shield-halved text-success me-2"></i>Cam Kết Chất Lượng:</h6>
+          <ul class="list-unstyled mb-0 small text-secondary">
+            <li class="mb-1"><i class="fa-solid fa-check text-success me-2"></i>Phụ tùng chính hãng nhập khẩu 100%.</li>
+            <li class="mb-1"><i class="fa-solid fa-check text-success me-2"></i>Bảo hành kỹ thuật từ 12 - 24 tháng.</li>
+            <li><i class="fa-solid fa-check text-success me-2"></i>Thi công chuẩn Zin, không ảnh hưởng hệ thống điện gốc.</li>
+          </ul>
+        </div>
+
+        <!-- Hành động -->
+        <div class="d-grid gap-2">
+          <a th:href="@{/tuning/booking(serviceId=${service?.id})}" class="btn btn-primary btn-lg fw-bold">
+            <i class="fa-solid fa-calendar-check me-2"></i>Đặt Lịch Thi Công Ngay
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Khối Thông Tin Chi Tiết & Quy Trình Thi Công -->
+  <div class="row mt-5">
+    <div class="col-12">
+      <div class="card border-0 shadow-sm rounded-3 p-4">
+        <h4 class="fw-bold text-primary mb-3"><i class="fa-solid fa-list-check me-2"></i>Quy Trình Thi Công Tại Garage</h4>
+        <div class="row g-3 text-center mt-2">
+          <div class="col-md-3">
+            <div class="p-3 bg-light rounded-3">
+              <div class="fs-2 text-primary fw-bold">01</div>
+              <div class="fw-bold mt-1">Khảo Sát & Tư Vấn</div>
+              <small class="text-muted">Kiểm tra tình trạng xe và tư vấn cấu hình phù hợp</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-3 bg-light rounded-3">
+              <div class="fs-2 text-primary fw-bold">02</div>
+              <div class="fw-bold mt-1">Lên Phương Án Thi Công</div>
+              <small class="text-muted">Chốt phương án, linh kiện và chi phí cố định</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-3 bg-light rounded-3">
+              <div class="fs-2 text-primary fw-bold">03</div>
+              <div class="fw-bold mt-1">Thi Công Chuyên Nghiệp</div>
+              <small class="text-muted">Kỹ thuật viên tay nghề cao trực tiếp lắp đặt</small>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="p-3 bg-light rounded-3">
+              <div class="fs-2 text-primary fw-bold">04</div>
+              <div class="fw-bold mt-1">Kiểm Thử & Bàn Giao</div>
+              <small class="text-muted">Test thực tế, hướng dẫn sử dụng và nghiệm thu</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Nhúng Footer dùng chung -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

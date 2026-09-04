@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Phụ Tùng - Garage Management</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+<div class="container py-5">
+    <!-- Nút quay lại -->
+    <div class="mb-4">
+        <a th:href="@{/spare-parts}" class="btn btn-outline-secondary">
+            <i class="fa-solid fa-arrow-left me-2"></i>Quay lại danh sách
+        </a>
+    </div>
+
+    <div class="row">
+        <!-- Thông tin chi tiết chính -->
+        <div class="col-lg-8 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="badge bg-info text-dark fs-6" th:text="'Mã PT: ' + ${sparePart.partCode != null ? sparePart.partCode : sparePart.id}">SKU-001</span>
+                    </div>
+
+                    <h2 class="card-title fw-bold text-dark mb-3" th:text="${sparePart.name}">Tên Phụ Tùng</h2>
+
+                    <hr class="my-4">
+
+                    <h5 class="fw-bold mb-3"><i class="fa-solid fa-file-lines text-primary me-2"></i>Mô tả & Thông số kỹ thuật</h5>
+                    <p class="card-text text-secondary lh-lg" th:text="${sparePart.description}">
+                        Mô tả chi tiết về phụ tùng, thương hiệu, chất liệu và xuất xứ...
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cột Giá & Tình trạng tồn kho -->
+        <div class="col-lg-4">
+            <div class="card shadow-sm border-0 sticky-top" style="top: 20px;">
+                <div class="card-body p-4">
+                    <h5 class="card-title fw-bold mb-3">Thông Tin Bán Lẻ</h5>
+
+                    <div class="mb-3">
+                        <small class="text-muted d-block">Đơn giá</small>
+                        <span class="fs-2 fw-bold text-danger"
+                              th:text="${#numbers.formatDecimal(sparePart.price, 0, 'COMMA', 0, 'POINT')}">0</span>
+                        <span class="text-danger fw-bold fs-5">VNĐ</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <small class="text-muted d-block mb-1">Tình trạng kho</small>
+                        <span class="badge bg-success fs-6" th:if="${sparePart.stockQuantity == null || sparePart.stockQuantity > 0}">
+                                Còn <span th:text="${sparePart.stockQuantity != null ? sparePart.stockQuantity : 'N/A'}">10</span> sản phẩm
+                            </span>
+                        <span class="badge bg-danger fs-6" th:if="${sparePart.stockQuantity != null && sparePart.stockQuantity <= 0}">Hết hàng</span>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-primary btn-lg" th:disabled="${sparePart.stockQuantity != null && sparePart.stockQuantity <= 0}">
+                            <i class="fa-solid fa-cart-plus me-2"></i>Thêm Vào Yêu Cầu
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:replace="~{fragments/footer}"></div>
+</body>
+</html>

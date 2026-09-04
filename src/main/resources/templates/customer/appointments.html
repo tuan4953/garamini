@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lịch Hẹn Của Tôi - Garage Auto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold mb-0 text-primary"><i class="fa-solid fa-calendar-check me-2"></i> Lịch Hẹn Của Tôi</h3>
+        <a th:href="@{/booking}" class="btn btn-primary fw-bold">
+            <i class="fa-solid fa-plus me-1"></i> Đặt Lịch Mới
+        </a>
+    </div>
+
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th class="ps-3">Mã Lịch</th>
+                        <th>Phương Tiện</th>
+                        <th>Thời Gian Hẹn</th>
+                        <th>Dịch Vụ / Yêu Cầu</th>
+                        <th>Trạng Thái</th>
+                        <th class="text-end pe-3">Thao Tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="apt : ${appointments}" th:if="${appointments != null and !#lists.isEmpty(appointments)}">
+                        <td class="ps-3 fw-bold text-primary" th:text="${'#APT-' + (apt?.id ?: '000')}">#APT-101</td>
+                        <td th:text="${apt?.vehicle?.licensePlate ?: (apt?.licensePlate ?: 'N/A')}">30F-123.45</td>
+                        <td th:text="${apt?.appointmentDate != null ? #temporals.format(apt.appointmentDate, 'dd/MM/yyyy HH:mm') : 'N/A'}">20/10/2026 09:00</td>
+                        <td th:text="${(apt?.serviceName) ?: ((apt?.note) ?: 'Bảo dưỡng định kỳ')}">Bảo dưỡng định kỳ</td>
+                        <td>
+                            <span th:if="${apt?.status?.name() == 'PENDING' or apt?.status == 'PENDING'}" class="badge bg-warning text-dark">Chờ xác nhận</span>
+                            <span th:if="${apt?.status?.name() == 'CONFIRMED' or apt?.status == 'CONFIRMED'}" class="badge bg-info text-dark">Đã xác nhận</span>
+                            <span th:if="${apt?.status?.name() == 'COMPLETED' or apt?.status == 'COMPLETED'}" class="badge bg-success">Hoàn thành</span>
+                            <span th:if="${apt?.status?.name() == 'CANCELLED' or apt?.status == 'CANCELLED'}" class="badge bg-danger">Đã hủy</span>
+                        </td>
+                        <td class="text-end pe-3">
+                            <a th:href="@{/customer/appointments/{id}(id=${apt?.id})}" class="btn btn-outline-secondary btn-sm">Chi tiết</a>
+                        </td>
+                    </tr>
+                    <tr th:if="${appointments == null or #lists.isEmpty(appointments)}">
+                        <td colspan="6" class="text-center py-5 text-muted">
+                            <i class="fa-solid fa-calendar-xmark fa-2x mb-2 d-block"></i>
+                            Bạn chưa có lịch hẹn bảo dưỡng nào.
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

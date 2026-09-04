@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dịch Vụ Cứu Hộ Ô Tô 24/7</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
+
+<!-- Banner Cứu Hộ Khẩn Cấp -->
+<div class="bg-danger text-white py-5 mb-4">
+    <div class="container text-center">
+        <h1 class="fw-bold"><i class="fa-solid fa-truck-pickup me-2"></i> DỊCH VỤ CỨU HỘ Ô TÔ 24/7</h1>
+        <p class="lead">Nhanh chóng - Chuyên nghiệp - Có mặt sau 15-30 phút gọi</p>
+        <a href="tel:19001234" class="btn btn-warning btn-lg fw-bold rounded-pill px-4 shadow">
+            <i class="fa-solid fa-phone-volume me-2"></i> HOTLINE KHẨN CẤP: 1900 1234
+        </a>
+    </div>
+</div>
+
+<div class="container my-4">
+    <h3 class="fw-bold mb-4 border-start border-4 border-danger ps-3">Các Gói / Dịch Vụ Cứu Hộ</h3>
+
+    <!-- Danh sách Dịch vụ Cứu hộ -->
+    <div class="row g-4" th:if="${rescueServices != null and !#lists.isEmpty(rescueServices)}">
+        <div class="col-md-6 col-lg-4" th:each="service : ${rescueServices}">
+            <div class="card h-100 shadow-sm border-0 rounded-3">
+                <img th:src="${!#strings.isEmpty(service?.imageUrl) ? service.imageUrl : 'https://via.placeholder.com/400x250?text=Cuu+Ho+24/7'}"
+                     class="card-img-top rounded-top-3" alt="Dịch vụ cứu hộ" style="height: 200px; object-fit: cover;">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title fw-bold" th:text="${service?.name ?: 'Dịch vụ cứu hộ'}">Tên dịch vụ</h5>
+                    <p class="card-text text-muted flex-grow-1" th:text="${service?.shortDescription ?: 'Hỗ trợ sự cố tận nơi nhanh chóng.'}">Mô tả ngắn dịch vụ...</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                            <span class="text-danger fw-bold fs-5"
+                                  th:text="${service?.price != null ? #numbers.formatDecimal(service.price, 0, 'COMMA', 0, 'POINT') + ' VNĐ' : 'Liên hệ'}">500,000 VNĐ</span>
+                        <div class="btn-group">
+                            <a th:href="@{/rescue/detail/{id}(id=${service?.id})}" class="btn btn-outline-secondary btn-sm">Chi tiết</a>
+                            <a th:href="@{/rescue/booking(serviceId=${service?.id})}" class="btn btn-danger btn-sm">Gọi ngay</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trạng thái chưa có dữ liệu (Chống nổ lỗi 500) -->
+    <div class="alert alert-info text-center py-5 shadow-sm" th:if="${rescueServices == null or #lists.isEmpty(rescueServices)}">
+        <i class="fa-solid fa-triangle-exclamation fa-2x mb-3 text-warning"></i>
+        <h5>Hiện chưa có danh sách gói cứu hộ hiển thị.</h5>
+        <p class="mb-3">Nếu bạn đang cần cứu hộ gấp, vui lòng bấm nút gọi hotline bên dưới.</p>
+        <a href="tel:19001234" class="btn btn-danger fw-bold"><i class="fa-solid fa-phone me-1"></i> Gọi Hotline 1900 1234</a>
+    </div>
+</div>
+
+<!-- Thêm Fragment Footer nếu có (tùy chọn) -->
+<div th:replace="~{fragments/footer}"></div>
+
+<script href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
