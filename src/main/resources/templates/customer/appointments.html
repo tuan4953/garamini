@@ -10,8 +10,6 @@
 <body class="bg-light">
 
 <div th:replace="~{fragments/header}"></div>
-
-<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
 <div th:replace="~{fragments/navbar}"></div>
 
 <div class="container my-5">
@@ -39,9 +37,9 @@
                     <tbody>
                     <tr th:each="apt : ${appointments}" th:if="${appointments != null and !#lists.isEmpty(appointments)}">
                         <td class="ps-3 fw-bold text-primary" th:text="${'#APT-' + (apt?.id ?: '000')}">#APT-101</td>
-                        <td th:text="${apt?.vehicle?.licensePlate ?: (apt?.licensePlate ?: 'N/A')}">30F-123.45</td>
-                        <td th:text="${apt?.appointmentDate != null ? #temporals.format(apt.appointmentDate, 'dd/MM/yyyy HH:mm') : 'N/A'}">20/10/2026 09:00</td>
-                        <td th:text="${(apt?.serviceName) ?: ((apt?.note) ?: 'Bảo dưỡng định kỳ')}">Bảo dưỡng định kỳ</td>
+                        <td th:text="${apt.licensePlate} ?: 'N/A'">30F-123.45</td>
+                        <td th:text="${apt?.appointmentDate} ? ${#temporals.format(apt.appointmentDate, 'dd/MM/yyyy HH:mm')} : 'N/A'">20/10/2026 09:00</td>
+                        <td th:text="${(apt?.serviceName) ?: ((apt?.notes) ?: 'Bảo dưỡng định kỳ')}">Bảo dưỡng định kỳ</td>
                         <td>
                             <span th:if="${apt?.status?.name() == 'PENDING' or apt?.status == 'PENDING'}" class="badge bg-warning text-dark">Chờ xác nhận</span>
                             <span th:if="${apt?.status?.name() == 'CONFIRMED' or apt?.status == 'CONFIRMED'}" class="badge bg-info text-dark">Đã xác nhận</span>

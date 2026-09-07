@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Chính Sách & Lịch Sử Bảo Hành</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Sổ Bảo Hành Của Tôi</h2>
+        <a th:href="@{/customer/appointments}" class="btn btn-outline-secondary">Quay lại Lịch hẹn</a>
+    </div>
+
+    <!-- Thông báo thành công/lỗi nếu có -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <!-- Bảng danh sách bảo hành -->
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white fw-bold">Danh Sách Phụ Tùng & Dịch Vụ Được Bảo Hành</div>
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>Mã BH</th>
+                    <th>Xe</th>
+                    <th>Hạng Mục / Phụ Tùng</th>
+                    <th>Ngày Bắt Đầu</th>
+                    <th>Thời Hạn</th>
+                    <th>Trạng Thái</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:if="${#lists.isEmpty(warranties)}">
+                    <td colspan="6" class="text-center py-4 text-muted">Bạn chưa có dữ liệu bảo hành nào.</td>
+                </tr>
+                <tr th:each="w : ${warranties}">
+                    <td th:text="${w.id}">#1</td>
+                    <td th:text="${w.vehicle?.licensePlate}">29A-12345</td>
+                    <td th:text="${w.serviceName}">Thay nhớt / Phụ tùng A</td>
+                    <td th:text="${w.startDate != null ? #temporals.format(w.startDate, 'dd/MM/yyyy') : 'N/A'}">01/01/2026</td>
+                    <td th:text="${w.expiryDate != null ? #temporals.format(w.expiryDate, 'dd/MM/yyyy') : 'N/A'}">01/01/2027</td>
+                    <td>
+                        <span class="badge bg-success" th:if="${w.active}">Còn Hạn</span>
+                        <span class="badge bg-secondary" th:unless="${w.active}">Hết Hạn</span>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

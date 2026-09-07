@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Lịch Hẹn Mới - Garage Auto</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-light">
+
+<!-- Header & Navbar -->
+<div th:replace="~{fragments/header}"></div>
+<div th:replace="~{fragments/navbar}"></div>
+
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a th:href="@{/customer/appointments}" class="text-decoration-none">Lịch Hẹn Của Tôi</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Tạo Lịch Hẹn</li>
+                </ol>
+            </nav>
+
+            <div class="card shadow-sm border-0 rounded-3">
+                <div class="card-header bg-primary text-white py-3">
+                    <h4 class="mb-0 fw-bold"><i class="fa-solid fa-calendar-plus me-2"></i>Đặt Lịch Sửa Chữa / Bảo Dưỡng</h4>
+                </div>
+
+                <div class="card-body p-4">
+                    <!-- Form gửi thông tin tới POST /customer/appointments/create -->
+                    <form th:action="@{/customer/appointments/create}" method="post" th:object="${appointmentRequest}">
+
+                        <!-- Chọn xe -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Chọn Phương Tiện <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-car"></i></span>
+                                <select class="form-select" th:field="*{vehicleId}" required>
+                                    <option value="" disabled selected>-- Chọn xe cần sửa chữa / bảo dưỡng --</option>
+                                    <option th:each="v : ${vehicles}"
+                                            th:value="${v.id}"
+                                            th:selected="${appointmentRequest.vehicleId != null and appointmentRequest.vehicleId == v.id}"
+                                            th:text="${v.licensePlate + ' - ' + v.brand + ' ' + v.model}">
+                                        30F-123.45 - Honda SH 150i
+                                    </option>
+                                </select>
+                            </div>
+                            <div class="form-text">
+                                Bạn chưa thấy xe của mình? <a th:href="@{/customer/vehicles}" class="text-primary fw-semibold">Thêm phương tiện mới tại đây</a>.
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Chọn Dịch Vụ <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+                                <select class="form-select" th:field="*{serviceId}" required>
+                                    <option value="" disabled selected>-- Chọn dịch vụ --</option>
+                                    <option th:each="s : ${services}"
+                                            th:value="${s.id}"
+                                            th:text="${s.name}">
+                                        Thay nhớt
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- Ngày & Giờ hẹn -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Thời Gian Hẹn <span class="text-danger">*</span></label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fa-solid fa-calendar-days"></i></span>
+                                <input type="datetime-local" class="form-control" th:field="*{appointmentDate}" required>
+                            </div>
+                        </div>
+
+                        <!-- Ghi chú nội dung sửa chữa -->
+                        <div class="mb-4">
+                            <label class="form-label fw-bold">Mô Tả Yêu Cầu / Sự Cố Xe</label>
+                            <textarea class="form-control" th:field="*{notes}" rows="4" placeholder="..."></textarea>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="d-flex justify-content-between align-items-center pt-3 border-top">
+                            <a th:href="@{/customer/appointments}" class="btn btn-outline-secondary px-4">
+                                <i class="fa-solid fa-arrow-left me-1"></i> Quay Lại
+                            </a>
+                            <button type="submit" class="btn btn-primary px-5 fw-bold">
+                                <i class="fa-solid fa-paper-plane me-1"></i> Xác Nhận Đặt Lịch
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Không cho phép chọn ngày quá quá khứ
+    document.addEventListener("DOMContentLoaded", function () {
+        const dateInput = document.getElementById("appointmentDate");
+        if (dateInput) {
+            dateInput.setAttribute("min", new Date().toISOString().split("T")[0]);
+        }
+    });
+</script>
+</body>
+</html>

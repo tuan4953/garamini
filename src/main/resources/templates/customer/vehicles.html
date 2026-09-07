@@ -10,8 +10,6 @@
 <body class="bg-light">
 
 <div th:replace="~{fragments/header}"></div>
-
-<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
 <div th:replace="~{fragments/navbar}"></div>
 
 <div class="container my-5">
@@ -24,27 +22,51 @@
     </div>
 
     <!-- Notification -->
-    <div th:if="${param.success}" class="alert alert-success alert-dismissible fade show" role="alert">
-        <i class="fa-solid fa-circle-check me-2"></i> Thêm xe thành công!
+    <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fa-solid fa-circle-check me-2"></i> <span th:text="${successMessage}">Thêm xe thành công!</span>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 
-    <!-- Vehicle Cards -->
+    <!-- Vehicle Cards Grid -->
     <div class="row g-4" th:if="${vehicles != null and !#lists.isEmpty(vehicles)}">
         <div class="col-md-6 col-lg-4" th:each="v : ${vehicles}">
-            <div class="card shadow-sm border-0 h-100 rounded-3">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <span class="badge bg-primary fs-6 px-3 py-2" th:text="${v?.licensePlate ?: '30A-000.00'}">30F-123.45</span>
-                        <span class="text-muted small" th:text="${v?.year != null ? 'Năm SX: ' + v.year : ''}">Năm SX: 2022</span>
-                    </div>
-                    <h5 class="card-title fw-bold text-dark" th:text="${(v?.make ?: 'Hãng xe') + ' ' + (v?.model ?: 'Dòng xe')}">Toyota Camry</h5>
-                    <p class="card-text text-secondary mb-1"><i class="fa-solid fa-palette me-2"></i>Màu sắc: <span th:text="${v?.color ?: 'N/A'}">Trắng</span></p>
-                    <p class="card-text text-secondary"><i class="fa-solid fa-barcode me-2"></i>Số VIN: <span th:text="${v?.vin ?: 'N/A'}">123456789</span></p>
+            <div class="card shadow-sm border-0 h-100 rounded-3 overflow-hidden">
+                <!-- Hiển thị Ảnh Xe từ Database (Hoặc ảnh mặc định) -->
+                <div class="position-relative bg-dark text-center" style="height: 180px;">
+                    <img th:src="${v?.imageUrl != null and !#strings.isEmpty(v.imageUrl) ? v.imageUrl : '/images/default-vehicle.png'}"
+                         alt="Ảnh xe"
+                         class="w-100 h-100"
+                         style="object-fit: cover;">
+                    <span class="position-absolute top-0 end-0 bg-primary text-white badge fs-6 m-2 px-3 py-2 shadow-sm"
+                          th:text="${v?.licensePlate ?: 'N/A'}">30F-123.45</span>
                 </div>
+
+                <div class="card-body">
+                    <h5 class="card-title fw-bold text-dark mb-2"
+                        th:text="${(v?.brand ?: 'Hãng xe') + ' ' + (v?.model ?: 'Dòng xe')}">Honda SH 150i</h5>
+
+                    <div class="row text-secondary small g-2 mb-2">
+                        <div class="col-6">
+                            <i class="fa-solid fa-palette me-1"></i>Màu: <span class="fw-semibold text-dark" th:text="${v?.color ?: 'N/A'}">Trắng</span>
+                        </div>
+                        <div class="col-6">
+                            <i class="fa-solid fa-calendar me-1"></i>Năm SX: <span class="fw-semibold text-dark" th:text="${v?.manufactureYear ?: 'N/A'}">2022</span>
+                        </div>
+                    </div>
+
+                    <div class="text-secondary small">
+                        <p class="mb-1" th:if="${v?.chassisNumber != null and !#strings.isEmpty(v.chassisNumber)}">
+                            <i class="fa-solid fa-barcode me-1"></i>Số khung: <span th:text="${v.chassisNumber}">-</span>
+                        </p>
+                        <p class="mb-0" th:if="${v?.engineNumber != null and !#strings.isEmpty(v.engineNumber)}">
+                            <i class="fa-solid fa-gears me-1"></i>Số máy: <span th:text="${v.engineNumber}">-</span>
+                        </p>
+                    </div>
+                </div>
+
                 <div class="card-footer bg-white border-0 pt-0 pb-3">
-                    <a th:href="@{/customer/appointments(vehicleId=${v?.id})}" class="btn btn-outline-primary btn-sm w-100">
-                        <i class="fa-solid fa-calendar-check me-1"></i> Đặt lịch bảo dưỡng cho xe này
+                    <a th:href="@{/appointments/new(vehicleId=${v?.id})}" class="btn btn-outline-primary btn-sm w-100 fw-bold">
+                        <i class="fa-solid fa-calendar-check me-1"></i> Đặt Lịch Sửa Chữa
                     </a>
                 </div>
             </div>
@@ -52,7 +74,7 @@
     </div>
 
     <!-- Empty State -->
-    <div class="alert alert-info text-center py-5 shadow-sm" th:if="${vehicles == null or #lists.isEmpty(vehicles)}">
+    <div class="alert alert-info text-center py-5 shadow-sm rounded-3" th:if="${vehicles == null or #lists.isEmpty(vehicles)}">
         <i class="fa-solid fa-car-side fa-3x text-secondary mb-3"></i>
         <h5>Bạn chưa đăng ký phương tiện nào.</h5>
         <p class="text-muted">Thêm xe ngay để dễ dàng đặt lịch và theo dõi lịch sử bảo dưỡng.</p>
@@ -61,42 +83,82 @@
 
 <!-- Modal Thêm Xe Mới -->
 <div class="modal fade" id="addVehicleModal" tabindex="-1" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form th:action="@{/customer/vehicles/add}" method="post">
+            <!-- Đã thêm enctype="multipart/form-data" để gửi file ảnh -->
+            <form th:action="@{/customer/vehicles/add}"
+                  th:object="${vehicleRequest}"
+                  method="post"
+                  enctype="multipart/form-data">
+
                 <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title fw-bold"><i class="fa-solid fa-car me-2"></i>Thêm Xe Mới</h5>
                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                 </div>
+
                 <div class="modal-body">
+                    <input type="hidden" th:field="*{ownerId}">
+
+                    <!-- Biển số xe -->
                     <div class="mb-3">
                         <label class="form-label fw-bold">Biển Số Xe <span class="text-danger">*</span></label>
-                        <input type="text" class="form-control" name="licensePlate" placeholder="VD: 30F-123.45" required>
+                        <input type="text" class="form-control" th:field="*{licensePlate}" placeholder="VD: 30F-123.45" required>
                     </div>
+
+                    <!-- Hãng xe & Dòng xe -->
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Hãng Xe</label>
-                            <input type="text" class="form-control" name="make" placeholder="VD: Toyota, Mazda...">
+                            <label class="form-label fw-bold">Hãng Xe <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{brand}" placeholder="VD: Honda, Yamaha, Toyota..." required>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Dòng Xe (Model)</label>
-                            <input type="text" class="form-control" name="model" placeholder="VD: CX-5, Camry...">
+                            <label class="form-label fw-bold">Dòng Xe (Model) <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" th:field="*{model}" placeholder="VD: SH 150i, Exciter, Camry..." required>
                         </div>
                     </div>
+
+                    <!-- Màu sắc & Năm sản xuất -->
                     <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label class="form-label fw-bold">Năm Sản Xuất</label>
-                            <input type="number" class="form-control" name="year" placeholder="VD: 2022">
-                        </div>
                         <div class="col-md-6 mb-3">
                             <label class="form-label fw-bold">Màu Xe</label>
-                            <input type="text" class="form-control" name="color" placeholder="VD: Trắng, Đen...">
+                            <input type="text" class="form-control" th:field="*{color}" placeholder="VD: Trắng, Đen...">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Năm Sản Xuất</label>
+                            <input type="number" class="form-control" th:field="*{manufactureYear}" placeholder="VD: 2022">
                         </div>
                     </div>
+
+                    <!-- Số khung & Số máy -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Số Khung</label>
+                            <input type="text" class="form-control" th:field="*{chassisNumber}" placeholder="Nhập số khung (nếu có)">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Số Máy</label>
+                            <input type="text" class="form-control" th:field="*{engineNumber}" placeholder="Nhập số máy (nếu có)">
+                        </div>
+                    </div>
+
+                    <!-- Upload Ảnh từ máy -->
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Hình Ảnh Phương Tiện</label>
+                        <input type="file" class="form-control" name="imageFile" accept="image/*" onchange="previewImage(event)">
+                        <div class="form-text">Cho phép định dạng .jpg, .png, .jpeg. Để trống nếu muốn dùng ảnh mặc định.</div>
+                    </div>
+
+                    <!-- Xem trước ảnh -->
+                    <div class="text-center mb-2" id="previewContainer" style="display: none;">
+                        <img id="imagePreview" src="#" alt="Ảnh xem trước" class="img-thumbnail" style="max-height: 150px;">
+                    </div>
                 </div>
+
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="submit" class="btn btn-primary fw-bold">Lưu Xe</button>
+                    <button type="submit" class="btn btn-primary fw-bold">
+                        <i class="fa-solid fa-floppy-disk me-1"></i> Lưu Xe
+                    </button>
                 </div>
             </form>
         </div>
@@ -105,5 +167,21 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<!-- Script Preview Ảnh khi chọn file -->
+<script>
+    function previewImage(event) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const output = document.getElementById('imagePreview');
+            const container = document.getElementById('previewContainer');
+            output.src = reader.result;
+            container.style.display = 'block';
+        };
+        if (event.target.files[0]) {
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    }
+</script>
 </body>
 </html>

@@ -17,6 +17,9 @@ public class AppointmentRequest {
     @NotNull(message = "Vui lòng chọn xe cần bảo dưỡng/sửa chữa")
     private Long vehicleId;
 
+    @NotNull(message = "Vui lòng chọn dịch vụ")
+    private Long serviceId;
+
     @NotNull(message = "Vui lòng chọn thời gian hẹn")
     @Future(message = "Thời gian hẹn phải ở trong tương lai")
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

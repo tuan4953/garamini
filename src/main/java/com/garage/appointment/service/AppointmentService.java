@@ -1,6 +1,5 @@
 package com.garage.appointment.service;
 
-
 import com.garage.appointment.dto.AppointmentRequest;
 import com.garage.appointment.dto.AppointmentResponse;
 import com.garage.appointment.dto.AppointmentUpdateRequest;
@@ -8,6 +7,7 @@ import com.garage.appointment.model.Appointment;
 import com.garage.appointment.repository.AppointmentRepository;
 import com.garage.exception.BusinessException;
 import com.garage.exception.ResourceNotFoundException;
+import com.garage.service.repository.ServiceRepository;
 import com.garage.user.model.User;
 import com.garage.user.repository.UserRepository;
 import com.garage.vehicle.model.Vehicle;
@@ -15,20 +15,20 @@ import com.garage.vehicle.repository.VehicleRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Service
+@org.springframework.stereotype.Service
 @RequiredArgsConstructor
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
     private final VehicleRepository vehicleRepository;
+    private final ServiceRepository serviceRepository;
 
     public List<AppointmentResponse> getAppointmentsByCustomer(Long customerId) {
         return appointmentRepository.findByCustomerIdOrderByAppointmentDateDesc(customerId)
@@ -56,11 +56,13 @@ public class AppointmentService {
         Vehicle vehicle = vehicleRepository.findById(request.getVehicleId())
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy thông tin xe"));
 
+        com.garage.service.model.Service service = serviceRepository.findById(request.getServiceId())
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy dịch vụ"));
+
         if (!vehicle.getOwner().getId().equals(customerId)) {
             throw new BusinessException("Phương tiện này không thuộc quyền sở hữu của bạn");
         }
 
-        // Kiểm tra xe có bị trùng lịch trong khoảng 1 giờ không
         LocalDateTime start = request.getAppointmentDate().minusMinutes(30);
         LocalDateTime end = request.getAppointmentDate().plusMinutes(30);
         boolean exists = appointmentRepository.existsByVehicleIdAndAppointmentDateBetweenAndStatusNot(
@@ -73,6 +75,7 @@ public class AppointmentService {
         Appointment appointment = Appointment.builder()
                 .customer(customer)
                 .vehicle(vehicle)
+                .service(service)
                 .appointmentDate(request.getAppointmentDate())
                 .status(Appointment.AppointmentStatus.PENDING)
                 .notes(request.getNotes())
@@ -125,6 +128,7 @@ public class AppointmentService {
                 .licensePlate(appointment.getVehicle().getLicensePlate())
                 .vehicleBrand(appointment.getVehicle().getBrand())
                 .vehicleModel(appointment.getVehicle().getModel())
+                .serviceName(appointment.getService() != null ? appointment.getService().getName() : null)
                 .appointmentDate(appointment.getAppointmentDate())
                 .status(appointment.getStatus())
                 .notes(appointment.getNotes())

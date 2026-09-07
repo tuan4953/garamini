@@ -1,12 +1,13 @@
 package com.garage.appointment.model;
 
-
+import com.garage.service.model.Service; // ⚠️ đổi đúng package thực tế của Service entity
 import com.garage.user.model.User;
 import com.garage.vehicle.model.Vehicle;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Entity
 @Table(name = "appointments")
@@ -20,6 +21,11 @@ public class Appointment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "appointment_time")
+    private LocalTime appointmentTime;
+    @Column(name = "appointment_code", unique = true, length = 20)
+    private String appointmentCode;
+
     @Column(name = "service_type")
     private String serviceType;
 
@@ -30,6 +36,10 @@ public class Appointment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id", nullable = false)
     private Vehicle vehicle;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "service_id", nullable = false)
+    private Service service;
 
     @Column(name = "appointment_date", nullable = false)
     private LocalDateTime appointmentDate;
@@ -56,6 +66,12 @@ public class Appointment {
         this.updatedAt = LocalDateTime.now();
         if (this.status == null) {
             this.status = AppointmentStatus.PENDING;
+        }
+        if (this.appointmentCode == null) {
+            this.appointmentCode = "APT-" + System.currentTimeMillis();
+        }
+        if (this.appointmentTime == null && this.appointmentDate != null) {
+            this.appointmentTime = this.appointmentDate.toLocalTime();
         }
     }
 

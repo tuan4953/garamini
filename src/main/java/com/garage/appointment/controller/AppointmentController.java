@@ -4,6 +4,7 @@ import com.garage.appointment.dto.AppointmentRequest;
 import com.garage.appointment.dto.AppointmentResponse;
 import com.garage.appointment.service.AppointmentService;
 import com.garage.security.CustomUserDetails;
+import com.garage.service.repository.ServiceRepository; // ⚠️ đổi đúng package thực tế
 import com.garage.vehicle.dto.VehicleResponse;
 import com.garage.vehicle.service.VehicleService;
 import jakarta.validation.Valid;
@@ -24,8 +25,8 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final VehicleService vehicleService;
+    private final ServiceRepository serviceRepository;
 
-    // 1. DÙNG CHO NAVBAR TRANG CHỦ
     @GetMapping("/appointments")
     public String showPublicAppointmentForm(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         AppointmentRequest request = new AppointmentRequest();
@@ -37,33 +38,30 @@ public class AppointmentController {
 
         model.addAttribute("appointmentRequest", request);
         model.addAttribute("vehicles", vehicles);
-        return "customer/appointments"; // Đổi chỉ sang templates/customer/appointments.html
+        model.addAttribute("services", serviceRepository.findAll());
+        return "customer/appointments";
     }
 
-    // 2. DANH SÁCH LỊCH HẸN CỦA KHÁCH HÀNG
     @GetMapping("/customer/appointments")
     public String listCustomerAppointments(@RequestParam(required = false) Long vehicleId,
                                            @AuthenticationPrincipal CustomUserDetails userDetails,
                                            Model model) {
-        // Lấy danh sách lịch hẹn
         List<AppointmentResponse> appointments = appointmentService.getAppointmentsByCustomer(userDetails.getId());
         model.addAttribute("appointments", appointments);
 
-        // Lấy danh sách xe để truyền vào Modal
         List<VehicleResponse> vehicles = vehicleService.getVehiclesByOwner(userDetails.getId());
         model.addAttribute("vehicles", vehicles);
+        model.addAttribute("services", serviceRepository.findAll());
 
-        // Chuẩn bị DTO cho Modal
         AppointmentRequest request = new AppointmentRequest();
         if (vehicleId != null) {
             request.setVehicleId(vehicleId);
         }
         model.addAttribute("appointmentRequest", request);
 
-        return "customer/appointments"; // Đổi từ "appointment/list" thành "customer/appointments"
+        return "customer/appointments";
     }
 
-    // 3. XỬ LÝ SUBMIT FORM ĐẶT LỊCH (TẠO MỚI)
     @PostMapping("/customer/appointments/create")
     public String createAppointment(@Valid @ModelAttribute("appointmentRequest") AppointmentRequest request,
                                     BindingResult bindingResult,
@@ -73,6 +71,7 @@ public class AppointmentController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("appointments", appointmentService.getAppointmentsByCustomer(userDetails.getId()));
             model.addAttribute("vehicles", vehicleService.getVehiclesByOwner(userDetails.getId()));
+            model.addAttribute("services", serviceRepository.findAll());
             return "customer/appointments";
         }
 
@@ -81,7 +80,6 @@ public class AppointmentController {
         return "redirect:/customer/appointments";
     }
 
-    // 4. HỦY LỊCH HẸN
     @PostMapping("/customer/appointments/{id}/cancel")
     public String cancelAppointment(@PathVariable Long id,
                                     @RequestParam String reason,
@@ -91,4 +89,68 @@ public class AppointmentController {
         redirectAttributes.addFlashAttribute("successMessage", "Hủy lịch hẹn thành công!");
         return "redirect:/customer/appointments";
     }
+
+    @GetMapping("/appointments/new")
+    public String showRepairAppointmentForm(@RequestParam(required = false) Long vehicleId,
+                                            @AuthenticationPrincipal CustomUserDetails userDetails,
+                                            Model model) {
+        AppointmentRequest request = new AppointmentRequest();
+        if (vehicleId != null) {
+            request.setVehicleId(vehicleId);
+        }
+
+        List<VehicleResponse> vehicles = Collections.emptyList();
+        if (userDetails != null) {
+            vehicles = vehicleService.getVehiclesByOwner(userDetails.getId());
+        }
+
+        model.addAttribute("appointmentRequest", request);
+        model.addAttribute("vehicles", vehicles);
+        model.addAttribute("services", serviceRepository.findAll());
+        return "customer/appointments-new";
+    }
+
+    @GetMapping("/customer/appointments/create")
+    public String showCreateFormDirectly(@RequestParam(required = false) Long vehicleId,
+                                         @AuthenticationPrincipal CustomUserDetails userDetails,
+                                         Model model) {
+        AppointmentRequest request = new AppointmentRequest();
+        if (vehicleId != null) {
+            request.setVehicleId(vehicleId);
+        }
+
+        List<VehicleResponse> vehicles = Collections.emptyList();
+        if (userDetails != null) {
+            vehicles = vehicleService.getVehiclesByOwner(userDetails.getId());
+        }
+
+        model.addAttribute("appointmentRequest", request);
+        model.addAttribute("vehicles", vehicles);
+        model.addAttribute("services", serviceRepository.findAll());
+
+        return "customer/appointment-create";
+    }
+    @GetMapping("/booking")
+    public String showBookingPage(@RequestParam(required = false) Long vehicleId,
+                                  @AuthenticationPrincipal CustomUserDetails userDetails,
+                                  Model model) {
+        AppointmentRequest request = new AppointmentRequest();
+        if (vehicleId != null) {
+            request.setVehicleId(vehicleId);
+        }
+
+        List<VehicleResponse> vehicles = Collections.emptyList();
+        if (userDetails != null) {
+            vehicles = vehicleService.getVehiclesByOwner(userDetails.getId());
+        }
+
+        model.addAttribute("appointmentRequest", request);
+        model.addAttribute("vehicles", vehicles);
+        model.addAttribute("services", serviceRepository.findAll());
+
+        // Trả về view tạo lịch hẹn trực tiếp
+        return "customer/appointment-create";
+    }
+
+
 }

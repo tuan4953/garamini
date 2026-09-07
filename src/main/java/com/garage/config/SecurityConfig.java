@@ -49,7 +49,7 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
 
-                        // PUBLIC
+                        // PUBLIC (Đã bổ sung /uploads/**)
                         .requestMatchers(
                                 "/",
                                 "/login",
@@ -57,6 +57,7 @@ public class SecurityConfig {
                                 "/css/**",
                                 "/js/**",
                                 "/images/**",
+                                "/uploads/**",        // <--- Cho phép truy cập công khai vào thư mục chứa ảnh upload
                                 "/favicon.ico"
                         ).permitAll()
 

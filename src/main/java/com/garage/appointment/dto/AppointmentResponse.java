@@ -1,6 +1,5 @@
 package com.garage.appointment.dto;
 
-
 import com.garage.appointment.model.Appointment;
 import lombok.*;
 
@@ -25,6 +24,9 @@ public class AppointmentResponse {
     private String licensePlate;
     private String vehicleBrand;
     private String vehicleModel;
+
+    // Thông tin dịch vụ
+    private String serviceName;
 
     private LocalDateTime appointmentDate;
     private Appointment.AppointmentStatus status;

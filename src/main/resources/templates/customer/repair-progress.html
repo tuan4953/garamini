@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Tiến Độ Sửa Chữa Xe</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+</head>
+<body class="bg-light">
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="bi bi-tools text-primary"></i> Tiến Độ Sửa Chữa Xe</h2>
+        <a th:href="@{/customer/appointments}" class="btn btn-outline-secondary">
+            <i class="bi bi-arrow-left"></i> Lịch hẹn của tôi
+        </a>
+    </div>
+
+    <!-- Trường hợp chưa có xe đang sửa -->
+    <div th:if="${#lists.isEmpty(repairOrders)}" class="card shadow-sm p-5 text-center">
+        <i class="bi bi-check-circle text-success display-1 mb-3"></i>
+        <h4>Hiện tại không có xe nào đang tiến hành sửa chữa!</h4>
+        <p class="text-muted">Khi xe của bạn được nhận vào xưởng, tiến độ chi tiết sẽ hiển thị tại đây.</p>
+    </div>
+
+    <!-- Danh sách các phiếu sửa chữa đang xử lý -->
+    <div th:each="order : ${repairOrders}" class="card shadow-sm mb-4">
+        <div class="card-header bg-white d-flex justify-content-between align-items-center py-3">
+            <div>
+                <h5 class="mb-0 text-primary" th:text="${'Xe: ' + order.vehicle?.licensePlate + ' (' + order.vehicle?.model + ')'}">Biển số xe</h5>
+                <small class="text-muted" th:text="${'Mã phiếu: #' + order.id + ' | Mã lịch hẹn: #' + (order.appointmentId ?: 'N/A')}">Mã phiếu</small>
+            </div>
+            <span class="badge bg-warning text-dark px-3 py-2 fs-6" th:text="${order.status}">ĐANG TIẾN HÀNH</span>
+        </div>
+
+        <div class="card-body">
+            <!-- Tiến trình trạng thái (Progress Bar) -->
+            <div class="row text-center mb-4 position-relative">
+                <div class="col-3">
+                    <div class="p-2 rounded" th:classappend="${order.step >= 1 ? 'bg-primary text-white' : 'bg-light text-muted'}">
+                        <i class="bi bi-clipboard-check fs-4"></i>
+                        <div class="small fw-bold mt-1">1. Tiếp nhận</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="p-2 rounded" th:classappend="${order.step >= 2 ? 'bg-primary text-white' : 'bg-light text-muted'}">
+                        <i class="bi bi-search fs-4"></i>
+                        <div class="small fw-bold mt-1">2. Kiểm tra</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="p-2 rounded" th:classappend="${order.step >= 3 ? 'bg-primary text-white' : 'bg-light text-muted'}">
+                        <i class="bi bi-wrench-adjustable fs-4"></i>
+                        <div class="small fw-bold mt-1">3. Đang sửa</div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="p-2 rounded" th:classappend="${order.step >= 4 ? 'bg-success text-white' : 'bg-light text-muted'}">
+                        <i class="bi bi-car-front-fill fs-4"></i>
+                        <div class="small fw-bold mt-1">4. Hoàn thành</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng chi tiết dịch vụ & thay thế phụ tùng -->
+            <h6 class="fw-bold mb-3"><i class="bi bi-list-task"></i> Hạng mục công việc & Phụ tùng:</h6>
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle">
+                    <thead class="table-light">
+                    <tr>
+                        <th>Nội dung / Phụ tùng</th>
+                        <th>Số lượng</th>
+                        <th>Thợ kỹ thuật</th>
+                        <th>Trạng thái công việc</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="item : ${order.items}">
+                        <td th:text="${item.itemName}">Thay nhớt / Lọc gió</td>
+                        <td th:text="${item.quantity}">1</td>
+                        <td th:text="${item.technicianName ?: 'Đang phân công'}">Thợ A</td>
+                        <td>
+                            <span class="badge bg-success" th:if="${item.completed}">Xong</span>
+                            <span class="badge bg-info text-dark" th:unless="${item.completed}">Đang làm</span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Dự kiến giao xe & Ghi chú -->
+            <div class="row mt-3 pt-2 border-top">
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Dự kiến hoàn thành:</strong>
+                        <span class="text-danger fw-bold" th:text="${order.expectedFinishTime != null ? #temporals.format(order.expectedFinishTime, 'HH:mm dd/MM/yyyy') : 'Đang cập nhật'}">17:00 04/09/2026</span>
+                    </p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p class="mb-1"><strong>Ghi chú của xưởng:</strong>
+                        <span class="text-muted" th:text="${order.notes ?: 'Không có'}">Xe đang chờ rửa sạch trước khi giao.</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

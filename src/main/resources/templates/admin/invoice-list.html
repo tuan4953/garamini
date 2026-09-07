@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
 </head>
 <body>
+<div th:replace="~{fragments/header}"></div>
 
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
 <div class="d-flex">
     <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
 

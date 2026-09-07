@@ -52,7 +52,7 @@
                 <td>
                     <a th:href="@{/admin/vehicles/edit/{id}(id=${v.id})}" class="btn btn-sm btn-warning">Sửa</a>
                     <form th:action="@{/admin/vehicles/delete/{id}(id=${v.id})}" method="post" class="d-inline"
-                          th:onsubmit="return confirm('Bạn có chắc muốn xóa xe này?');">
+                          th:onsubmit="return confirm('Bạn có chắc muốn xóa xe này?')">
                         <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
                     </form>
                 </td>

@@ -8,8 +8,10 @@
   <link rel="stylesheet" th:href="@{/css/vehicle.css}">
 </head>
 <body>
-<div th:replace="~{fragments/header :: header}"></div>
-<div th:replace="~{fragments/navbar :: navbar}"></div>
+<div th:replace="~{fragments/header}"></div>
+
+<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
+<div th:replace="~{fragments/navbar}"></div>
 
 <div class="container my-5">
   <div class="card shadow-lg">
