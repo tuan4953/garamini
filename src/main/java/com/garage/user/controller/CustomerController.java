@@ -1,6 +1,8 @@
 package com.garage.user.controller;
 
 import com.garage.security.CustomUserDetails;
+import com.garage.warranty.repository.WarrantyRepository; // 1. Import WarrantyRepository
+import lombok.RequiredArgsConstructor; // 2. Import RequiredArgsConstructor
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -12,7 +14,11 @@ import java.util.Collections;
 
 @Controller
 @RequestMapping("/customer")
+@RequiredArgsConstructor // 3. Tự động sinh Constructor inject WarrantyRepository
 public class CustomerController {
+
+    // 4. Khai báo field warrantyRepository
+    private final WarrantyRepository warrantyRepository;
 
     @GetMapping("/my-vehicles")
     public String showVehicles(Authentication authentication, Model model) {
@@ -31,16 +37,15 @@ public class CustomerController {
 
     @GetMapping("/warranty")
     public String showWarrantyPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
-        // Kiểm tra an toàn tránh lỗi NullPointer nếu người dùng chưa đăng nhập
         if (userDetails == null) {
             return "redirect:/login";
         }
 
-        model.addAttribute("warranties", Collections.emptyList());
+        // Lấy danh sách bảo hành của khách hàng từ DB
+        model.addAttribute("warranties", warrantyRepository.findByCustomerId(userDetails.getId()));
         return "customer/warranty";
     }
 
-    // ✅ Đã sửa từ "/customer/repair-progress" thành "/repair-progress"
     @GetMapping("/repair-progress")
     public String showRepairProgress(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         if (userDetails == null) {

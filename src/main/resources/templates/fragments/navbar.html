@@ -124,7 +124,6 @@
                 </button>
                 <div class="dropdown-panel">
                     <a th:href="@{/admin/services}"><i class="bi bi-tools"></i> Quản lý dịch vụ</a>
-                    <a th:href="@{/admin/price-list}"><i class="bi bi-tag"></i> Quản lý bảng giá</a>
                     <a th:href="@{/admin/promotions}"><i class="bi bi-gift"></i> Quản lý khuyến mãi</a>
                 </div>
             </li>
@@ -136,8 +135,9 @@
                 </button>
                 <div class="dropdown-panel">
                     <a th:href="@{/admin/appointments}"><i class="bi bi-calendar-week"></i> Quản lý lịch hẹn</a>
-                    <a th:href="@{/admin/repair-orders}"><i class="bi bi-file-earmark-medical"></i> Quản lý phiếu sửa chữa</a>
-                    <a th:href="@{/admin/quotes}"><i class="bi bi-file-earmark-text"></i> Quản lý báo giá</a>
+
+                    <!-- ✅ ĐÚNG: Sửa thành /admin/quotations -->
+                    <a th:href="@{/admin/quotations}"><i class="bi bi-file-earmark-text"></i> Quản lý báo giá</a>
                     <a th:href="@{/admin/spare-parts}"><i class="bi bi-box-seam"></i> Quản lý phụ tùng &amp; kho</a>
                 </div>
             </li>

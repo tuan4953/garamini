@@ -29,13 +29,18 @@ public class QuotationManagementController {
         model.addAttribute("statuses", Quotation.QuotationStatus.values());
         model.addAttribute("selectedStatus", status);
         model.addAttribute("keyword", keyword);
+
+        // ❌ Cũ: "admin/quotations-list"
+        // ✅ Mới: "quotation/quotations-list" (hoặc quotation-list tùy tên file trong thư mục quotation)
         return "admin/quotations-list";
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
         model.addAttribute("quotationRequest", new QuotationRequest());
-        return "admin/quotation-form";
+
+        // ✅ Sửa thành "quotation/quotation-form"
+        return "quotation/quotation-form";
     }
 
     @PostMapping("/create")
@@ -43,7 +48,7 @@ public class QuotationManagementController {
                                   BindingResult result,
                                   RedirectAttributes ra) {
         if (result.hasErrors()) {
-            return "admin/quotation-form";
+            return "quotation/quotation-form";
         }
         quotationService.createQuotation(request);
         ra.addFlashAttribute("successMessage", "Tạo báo giá thành công!");
@@ -53,7 +58,9 @@ public class QuotationManagementController {
     @GetMapping("/{id}")
     public String viewDetail(@PathVariable Long id, Model model) {
         model.addAttribute("quotation", quotationService.getQuotationById(id));
-        return "admin/quotation-detail";
+
+        // ✅ Sửa thành "quotation/quotation-detail"
+        return "quotation/quotation-detail";
     }
 
     @PostMapping("/{id}/status")

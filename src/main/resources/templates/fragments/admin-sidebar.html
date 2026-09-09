@@ -1,34 +1,163 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <body>
 
-<div th:fragment="admin-sidebar" class="admin-sidebar">
-    <div class="sidebar-header">
-        <h3>Quản Lý Garage</h3>
+<!-- Fragment Admin Sidebar -->
+<aside th:fragment="admin-sidebar" class="admin-sidebar">
+    <!-- Brand Header in Sidebar -->
+    <div class="sidebar-brand">
+        <div class="brand-badge">
+            <i class="bi bi-tools"></i>
+        </div>
+        <div class="brand-info">
+            <h4>T-RIDE GARAGE</h4>
+            <span>Quản trị hệ thống</span>
+        </div>
     </div>
-    <ul class="sidebar-menu">
-        <li>
-            <a th:href="@{/admin/dashboard}">
-                <i class="bi bi-speedometer2"></i> Dashboard
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/admin/appointments}">
-                <i class="bi bi-calendar-check"></i> Lịch hẹn
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/admin/users}">
-                <i class="bi bi-people"></i> Người dùng
-            </a>
-        </li>
-        <li>
-            <a th:href="@{/admin/services}">
-                <i class="bi bi-tools"></i> Dịch vụ
-            </a>
-        </li>
-    </ul>
-</div>
+
+    <!-- Scrollable Navigation Menu -->
+    <div class="sidebar-nav-wrapper">
+        <!-- TỔNG QUAN -->
+        <div class="sidebar-section-title">Tổng quan</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a th:href="@{/admin/dashboard}"
+                   th:classappend="${#httpServletRequest != null && #httpServletRequest.requestURI == '/admin/dashboard'} ? 'active' : ''">
+                    <i class="bi bi-grid-1x2-fill"></i>
+                    <span>Bảng điều khiển</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- VẬN HÀNH DỊCH VỤ -->
+        <div class="sidebar-section-title">Vận hành dịch vụ</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a th:href="@{/admin/appointments}">
+                    <i class="bi bi-calendar2-week-fill"></i>
+                    <span>Lịch hẹn bảo dưỡng</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/quotations}">
+                    <i class="bi bi-file-earmark-text-fill"></i>
+                    <span>Báo giá sửa chữa</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/repairs}">
+                    <i class="bi bi-wrench-adjustable-circle-fill"></i>
+                    <span>Phiếu sửa chữa</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/rescue}">
+                    <i class="bi bi-life-preserver"></i>
+                    <span>Cứu hộ khẩn cấp</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/vehicles}">
+                    <i class="bi bi-bicycle"></i>
+                    <span>Quản lý xe máy</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- KHO & SẢN PHẨM -->
+        <div class="sidebar-section-title">Dịch vụ &amp; Phụ tùng</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a th:href="@{/admin/services}">
+                    <i class="bi bi-tools"></i>
+                    <span>Dịch vụ &amp; bảng giá</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/spare-parts}">
+                    <i class="bi bi-box-seam-fill"></i>
+                    <span>Kho phụ tùng</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/tuning-products}">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    <span>Sản phẩm độ xe</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/promotions}">
+                    <i class="bi bi-tag-fill"></i>
+                    <span>Mã khuyến mãi</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- TÀI CHÍNH & HÓA ĐƠN -->
+        <div class="sidebar-section-title">Tài chính &amp; Hậu mãi</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a th:href="@{/admin/invoices}">
+                    <i class="bi bi-receipt-cutoff"></i>
+                    <span>Hóa đơn thanh toán</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/warranty}">
+                    <i class="bi bi-shield-check"></i>
+                    <span>Sổ bảo hành</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- QUẢN TRỊ NGƯỜI DÙNG -->
+        <div class="sidebar-section-title">Tài khoản &amp; Phân quyền</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a th:href="@{/admin/users}">
+                    <i class="bi bi-people-fill"></i>
+                    <span>Tài khoản người dùng</span>
+                </a>
+            </li>
+        </ul>
+
+        <!-- TRUYỀN THÔNG & TƯƠNG TÁC -->
+        <div class="sidebar-section-title">Nội dung &amp; Đánh giá</div>
+        <ul class="sidebar-menu">
+            <li>
+                <a th:href="@{/admin/news}">
+                    <i class="bi bi-newspaper"></i>
+                    <span>Tin tức &amp; bài viết</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/admin/reviews}">
+                    <i class="bi bi-star-fill"></i>
+                    <span>Đánh giá của khách</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Mini User Card in Sidebar -->
+    <div class="sidebar-footer-profile" sec:authorize="isAuthenticated()">
+        <div class="user-details">
+            <div class="user-avatar">
+                <i class="bi bi-shield-lock-fill"></i>
+            </div>
+            <div class="user-meta">
+                <div class="name" sec:authentication="name">Admin</div>
+                <div class="role">Quản trị viên</div>
+            </div>
+        </div>
+        <form th:action="@{/logout}" method="post" class="m-0 p-0">
+            <button type="submit" class="btn btn-link text-danger p-0 border-0" title="Đăng xuất">
+                <i class="bi bi-box-arrow-right fs-5"></i>
+            </button>
+        </form>
+    </div>
+</aside>
 
 </body>
 </html>

@@ -1,61 +1,63 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Chi Tiết Hóa Đơn</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Hóa Đơn - Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/tride-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<div th:replace="~{fragments/header}"></div>
+<div class="admin-layout">
 
-<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
-<div th:replace="~{fragments/navbar}"></div>
-<div class="d-flex">
-    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+    <div class="admin-main-container">
+        <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
 
-    <div class="container-fluid p-4">
-        <a th:href="@{/admin/invoices}" class="btn btn-outline-secondary mb-3">&larr; Quay lại</a>
+        <main class="admin-content">
+            <a th:href="@{/admin/invoices}" class="btn btn-outline-secondary mb-3">&larr; Quay lại danh sách</a>
 
-        <div th:replace="~{fragments/alert :: alert}"></div>
+            <div th:replace="~{fragments/alert :: alert}"></div>
 
-        <div class="card">
-            <div class="card-header">
-                <h3>Hóa Đơn <span th:text="${'#INV-' + invoice.id}"></span></h3>
-            </div>
-            <div class="card-body">
-                <p><strong>Ngày phát hành:</strong> <span th:text="${#temporals.format(invoice.issuedAt, 'dd/MM/yyyy HH:mm')}"></span></p>
-                <p><strong>Tổng tiền:</strong> <span th:text="${#numbers.formatDecimal(invoice.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
+            <div class="card shadow-sm border-0 rounded-3" style="max-width: 800px;">
+                <div class="card-header bg-dark text-white py-3">
+                    <h4 class="mb-0 fw-bold">Hóa Đơn <span th:text="${'#INV-' + invoice.id}"></span></h4>
+                </div>
+                <div class="card-body p-4">
+                    <p><strong>Ngày phát hành:</strong> <span th:text="${#temporals.format(invoice.issuedAt, 'dd/MM/yyyy HH:mm')}"></span></p>
+                    <p><strong>Tổng tiền:</strong> <span class="fs-5 fw-bold text-danger" th:text="${#numbers.formatDecimal(invoice.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' VNĐ'"></span></p>
 
-                <!-- Sửa 1 & 2: Đổi invoice.status thành invoice.paymentStatus + Thêm Badge màu sắc -->
-                <p><strong>Trạng thái:</strong>
-                    <span class="badge bg-success"
-                          th:if="${invoice.paymentStatus?.name() == 'PAID'}">Đã thanh toán</span>
-                    <span class="badge bg-warning text-dark"
-                          th:if="${invoice.paymentStatus?.name() == 'UNPAID'}">Chưa thanh toán</span>
-                    <span class="badge bg-secondary"
-                          th:if="${invoice.paymentStatus?.name() != 'PAID' && invoice.paymentStatus?.name() != 'UNPAID'}"
-                          th:text="${invoice.paymentStatus}">Khác</span>
-                </p>
+                    <p><strong>Trạng thái:</strong>
+                        <span class="badge bg-success"
+                              th:if="${invoice.paymentStatus?.name() == 'PAID'}">Đã thanh toán</span>
+                        <span class="badge bg-warning text-dark"
+                              th:if="${invoice.paymentStatus?.name() == 'UNPAID'}">Chưa thanh toán</span>
+                        <span class="badge bg-secondary"
+                              th:if="${invoice.paymentStatus?.name() != 'PAID' && invoice.paymentStatus?.name() != 'UNPAID'}"
+                              th:text="${invoice.paymentStatus}">Khác</span>
+                    </p>
 
-                <!-- Sửa 3: Đổi điều kiện kiểm tra từ invoice.status?.name() thành invoice.paymentStatus?.name() -->
-                <div th:if="${invoice.paymentStatus?.name() != 'PAID'}" class="mt-4 p-3 bg-light rounded border">
-                    <h5>Xác nhận thanh toán</h5>
-                    <form th:action="@{/admin/invoices/{id}/pay(id=${invoice.id})}" method="post" class="row g-2">
-                        <div class="col-auto">
-                            <select name="paymentMethod" class="form-select" required>
-                                <option value="CASH">Tiền mặt</option>
-                                <option value="BANK_TRANSFER">Chuyển khoản</option>
-                            </select>
-                        </div>
-                        <div class="col-auto">
-                            <button type="submit" class="btn btn-success">Xác nhận đã thu tiền</button>
-                        </div>
-                    </form>
+                    <div th:if="${invoice.paymentStatus?.name() != 'PAID'}" class="mt-4 p-4 bg-light rounded-3 border">
+                        <h5 class="fw-bold mb-3">Xác nhận thanh toán</h5>
+                        <form th:action="@{/admin/invoices/{id}/pay(id=${invoice.id})}" method="post" class="row g-2 align-items-center">
+                            <div class="col-auto">
+                                <select name="paymentMethod" class="form-select" required>
+                                    <option value="CASH">Tiền mặt</option>
+                                    <option value="BANK_TRANSFER">Chuyển khoản</option>
+                                </select>
+                            </div>
+                            <div class="col-auto">
+                                <button type="submit" class="btn btn-success fw-bold">Xác nhận đã thu tiền</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
+
+    <div th:replace="~{fragments/footer :: admin-footer}"></div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

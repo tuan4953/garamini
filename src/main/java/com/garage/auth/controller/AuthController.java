@@ -20,7 +20,9 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String login() {
+    public String login(jakarta.servlet.http.HttpServletRequest request) {
+        // Chủ động tạo Session trước để tránh lỗi "response has been committed" khi Spring Security chèn CSRF token
+        request.getSession(true);
         return "auth/login";
     }
 

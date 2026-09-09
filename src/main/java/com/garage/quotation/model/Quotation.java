@@ -64,7 +64,15 @@ public class Quotation {
         this.updatedAt = LocalDateTime.now();
     }
 
+    // ✅ CẬP NHẬT THÊM APPROVED VÀO ĐÂY:
     public enum QuotationStatus {
-        PENDING, ACCEPTED, REJECTED, EXPIRED
+        DRAFT,      // Nháp
+        PENDING,    // Chờ xử lý / Chờ duyệt
+        SENT,       // Đã gửi cho khách hàng
+        APPROVED,   // Đã duyệt
+        ACCEPTED,   // Khách hàng đồng ý
+        REJECTED,   // Từ chối
+        EXPIRED,    // Hết hạn
+        COMPLETED   // Hoàn thành
     }
 }

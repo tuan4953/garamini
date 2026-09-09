@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -10,7 +10,6 @@
 <div th:replace="~{fragments/header}"></div>
 
 <!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
-<div th:replace="~{fragments/navbar}"></div>
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h3 class="fw-bold text-dark" th:text="${promotionRequest.id == null ? 'Tạo mới mã khuyến mãi' : 'Chỉnh sửa mã khuyến mãi'}">Tạo khuyến mãi</h3>

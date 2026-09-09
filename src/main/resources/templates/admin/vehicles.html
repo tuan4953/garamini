@@ -1,70 +1,74 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quản Lý Phương Tiện - Admin</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" th:href="@{/css/tride-layout.css}">
     <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
-<div th:replace="~{fragments/header}"></div>
+<div class="admin-layout">
 
-<!-- 2. NHÚNG FILE NAVBAR (Thường chứa menu điều hướng chính) -->
-<div th:replace="~{fragments/navbar}"></div>
-<div class="d-flex">
-    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+    <div class="admin-main-container">
+        <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
 
-    <div class="container-fluid p-4">
-        <h2>Quản Lý Xe Trong Hệ Thống</h2>
+        <main class="admin-content">
+            <h2 class="fw-bold text-dark mb-4">Quản Lý Xe Trong Hệ Thống</h2>
 
-        <div th:replace="~{fragments/alert :: alert}"></div>
+            <div th:replace="~{fragments/alert :: alert}"></div>
 
-        <!-- Thanh tìm kiếm -->
-        <form th:action="@{/admin/vehicles}" method="get" class="row g-3 mb-4">
-            <div class="col-md-6">
-                <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tìm theo biển số, hãng xe, tên khách hàng...">
+            <!-- Thanh tìm kiếm -->
+            <form th:action="@{/admin/vehicles}" method="get" class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <input type="text" name="keyword" th:value="${keyword}" class="form-control" placeholder="Tìm theo biển số, hãng xe, tên khách hàng...">
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
+                </div>
+            </form>
+
+            <div class="admin-table-card">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Biển Số</th>
+                        <th>Hãng Xe</th>
+                        <th>Dòng Xe</th>
+                        <th>Chủ Xe</th>
+                        <th>SĐT</th>
+                        <th>Thao Tác</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="v : ${vehiclePage.content}">
+                        <td th:text="${v.id}">1</td>
+                        <td th:text="${v.licensePlate}" class="fw-bold">29A1-12345</td>
+                        <td th:text="${v.brand}">Honda</td>
+                        <td th:text="${v.model}">SH</td>
+                        <td th:text="${v.ownerFullName}">Nguyễn Văn A</td>
+                        <td th:text="${v.ownerPhone}">0987654321</td>
+                        <td>
+                            <a th:href="@{/admin/vehicles/edit/{id}(id=${v.id})}" class="btn btn-sm btn-warning">Sửa</a>
+                            <form th:action="@{/admin/vehicles/delete/{id}(id=${v.id})}" method="post" class="d-inline"
+                                  th:onsubmit="return confirm('Bạn có chắc muốn xóa xe này?')">
+                                <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
+                            </form>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="col-md-2">
-                <button type="submit" class="btn btn-primary w-100">Tìm kiếm</button>
-            </div>
-        </form>
 
-        <table class="table table-bordered table-hover shadow-sm">
-            <thead class="table-dark">
-            <tr>
-                <th>ID</th>
-                <th>Biển Số</th>
-                <th>Hãng Xe</th>
-                <th>Dòng Xe</th>
-                <th>Chủ Xe</th>
-                <th>SĐT</th>
-                <th>Thao Tác</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="v : ${vehiclePage.content}">
-                <td th:text="${v.id}">1</td>
-                <td th:text="${v.licensePlate}" class="fw-bold">29A1-12345</td>
-                <td th:text="${v.brand}">Honda</td>
-                <td th:text="${v.model}">SH</td>
-                <td th:text="${v.ownerFullName}">Nguyễn Văn A</td>
-                <td th:text="${v.ownerPhone}">0987654321</td>
-                <td>
-                    <a th:href="@{/admin/vehicles/edit/{id}(id=${v.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                    <form th:action="@{/admin/vehicles/delete/{id}(id=${v.id})}" method="post" class="d-inline"
-                          th:onsubmit="return confirm('Bạn có chắc muốn xóa xe này?')">
-                        <button type="submit" class="btn btn-sm btn-danger">Xóa</button>
-                    </form>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-
-        <!-- Phân trang -->
-        <div th:replace="~{fragments/pagination :: pagination}"></div>
+            <!-- Phân trang -->
+            <div th:replace="~{fragments/pagination :: pagination}"></div>
+        </main>
     </div>
+    <div th:replace="~{fragments/footer :: admin-footer}"></div>
 </div>
-<div th:replace="~{fragments/footer}"></div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
