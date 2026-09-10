@@ -43,13 +43,13 @@
         <td th:text="${item.itemName}"></td>
         <td th:text="${item.type}"></td>
         <td th:text="${item.quantity}"></td>
-        <td th:text="${#numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
-        <td th:text="${#numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"></td>
+        <td th:text="${item.unitPrice != null ? #numbers.formatDecimal(item.unitPrice, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></td>
+        <td th:text="${item.totalPrice != null ? #numbers.formatDecimal(item.totalPrice, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></td>
       </tr>
       </tbody>
     </table>
     <div class="text-end me-3 fs-4 text-danger fw-bold">
-      Tổng Cộng: <span th:text="${#numbers.formatDecimal(repair.totalAmount, 0, 'COMMA', 0, 'POINT')} + ' đ'"></span>
+      Tổng Cộng: <span th:text="${repair.totalAmount != null ? #numbers.formatDecimal(repair.totalAmount, 0, 'COMMA', 0, 'POINT') + ' đ' : '0 đ'}"></span>
     </div>
   </div>
 </div>

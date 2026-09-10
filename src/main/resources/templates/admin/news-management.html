@@ -1,93 +1,126 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Quản lý Tin tức - Admin</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <link rel="stylesheet" th:href="@{/css/tride-layout.css}">
-  <link rel="stylesheet" th:href="@{/css/admin.css}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý Tin tức - Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/tride-layout.css}">
+    <link rel="stylesheet" th:href="@{/css/admin.css}">
 </head>
 <body>
 <div class="admin-layout">
 
-  <div class="admin-main-container">
-    <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
+    <div class="admin-main-container">
+        <div th:replace="~{fragments/admin-sidebar :: admin-sidebar}"></div>
 
-    <main class="admin-content">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h3 class="fw-bold text-dark"><i class="fas fa-newspaper me-2 text-primary"></i>Quản lý Bài viết & Tin tức</h3>
-    <a th:href="@{/admin/news/create}" class="btn btn-primary fw-bold">
-      <i class="fas fa-plus me-1"></i> Thêm bài viết mới
-    </a>
-  </div>
+        <main class="admin-content">
 
-  <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
-    <span th:text="${successMessage}"></span>
-    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-  </div>
+            <!-- Tiêu đề trang -->
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="fw-bold mb-1">
+                        <i class="fas fa-newspaper me-2 text-primary"></i>Quản lý Bài viết &amp; Tin tức
+                    </h3>
+                    <p class="text-muted mb-0">Quản lý toàn bộ nội dung tin tức xuất bản trên hệ thống</p>
+                </div>
+                <a th:href="@{/admin/news/create}" class="btn btn-primary fw-bold">
+                    <i class="fas fa-plus me-1"></i> Thêm bài viết mới
+                </a>
+            </div>
 
-  <div class="card shadow-sm border-0">
-    <div class="card-body p-0">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle mb-0">
-          <thead class="table-dark">
-          <tr>
-            <th>#ID</th>
-            <th>Hình ảnh</th>
-            <th style="width: 35%;">Tiêu đề</th>
-            <th>Ngày đăng</th>
-            <th>Trạng thái</th>
-            <th class="text-center">Thao tác</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr th-each="news : ${newsList}">
-            <td class="fw-bold" th:text="'#' + ${news.id}">#1</td>
-            <td>
-              <img th-src="${news.imageUrl != null && !news.imageUrl.isEmpty() ? news.imageUrl : 'https://via.placeholder.com/60'}"
-                   class="rounded" style="width: 60px; height: 40px; object-fit: cover;">
-            </td>
-            <td class="fw-bold text-dark" th:text="${news.title}">Tiêu đề bài viết</td>
-            <td th:text="${#temporals.format(news.createdAt, 'dd/MM/yyyy HH:mm')}">25/08/2026</td>
-            <td>
-              <span th:if="${news.published}" class="badge bg-success">Đã xuất bản</span>
-              <span th:if="${!news.published}" class="badge bg-secondary">Nháp / Ẩn</span>
-            </td>
-            <td class="text-center">
-              <a th:href="@{'/admin/news/edit/' + ${news.id}}" class="btn btn-sm btn-outline-primary me-1">
-                <i class="fas fa-edit"></i>
-              </a>
+            <!-- Thông báo thành công -->
+            <div th:if="${successMessage}" class="alert alert-success alert-dismissible fade show" role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                <span th:text="${successMessage}"></span>
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
 
-              <form th-action="@{'/admin/news/toggle-status/' + ${news.id}}" method="POST" class="d-inline me-1">
-                <button type="submit"
-                        th:class="${news.published ? 'btn btn-sm btn-outline-warning' : 'btn btn-sm btn-outline-success'}"
-                        th-title="${news.published ? 'Ẩn bài viết' : 'Hiện bài viết'}">
-                  <i th:class="${news.published ? 'fas fa-eye-slash' : 'fas fa-eye'}"></i>
-                </button>
-              </form>
+            <!-- Bảng danh sách bài viết -->
+            <div class="admin-table-card">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0">
+                        <thead>
+                        <tr>
+                            <th>#ID</th>
+                            <th>Hình ảnh</th>
+                            <th style="width: 35%;">Tiêu đề</th>
+                            <th>Ngày đăng</th>
+                            <th>Trạng thái</th>
+                            <th class="text-center">Thao tác</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <!-- ✅ Đúng: th:each thay vì th-each -->
+                        <tr th:each="news : ${newsList}">
+                            <td class="fw-bold" th:text="'#' + ${news.id}">#1</td>
+                            <td>
+                                <!-- ✅ Đúng: th:src thay vì th-src -->
+                                <img th:src="${news.imageUrl != null && !news.imageUrl.isEmpty() ? news.imageUrl : 'https://placehold.co/60x40/e2e8f0/94a3b8?text=No+Img'}"
+                                     class="rounded border"
+                                     style="width: 60px; height: 40px; object-fit: cover;"
+                                     alt="thumbnail">
+                            </td>
+                            <td>
+                                <div class="fw-bold text-dark" th:text="${news.title}">Tiêu đề bài viết</div>
+                                <small class="text-muted" th:text="${news.summary}"></small>
+                            </td>
+                            <td th:text="${#temporals.format(news.createdAt, 'dd/MM/yyyy HH:mm')}">25/08/2026</td>
+                            <td>
+                                <span th:if="${news.published}" class="badge bg-success">
+                                    <i class="bi bi-eye me-1"></i>Đã xuất bản
+                                </span>
+                                <span th:if="${!news.published}" class="badge bg-secondary">
+                                    <i class="bi bi-eye-slash me-1"></i>Nháp / Ẩn
+                                </span>
+                            </td>
+                            <td class="text-center">
+                                <!-- Sửa -->
+                                <a th:href="@{/admin/news/edit/{id}(id=${news.id})}"
+                                   class="btn btn-sm btn-outline-primary me-1"
+                                   title="Chỉnh sửa">
+                                    <i class="fas fa-edit"></i>
+                                </a>
 
-              <form th:action="@{'/admin/news/delete/' + ${news.id}}" method="POST" class="d-inline"
-                    onclick="return confirm('Bạn có chắc chắn muốn xóa bài viết này?')">
-                <button type="submit" class="btn btn-sm btn-outline-danger">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </form>
-            </td>
-          </tr>
-          <tr th:if="${#lists.isEmpty(newsList)}">
-            <td colspan="6" class="text-center py-4 text-muted">Chưa có bài viết nào trong hệ thống.</td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
+                                <!-- Ẩn / Hiện - ✅ Đúng: th:action thay vì th-action -->
+                                <form th:action="@{/admin/news/toggle-status/{id}(id=${news.id})}"
+                                      method="POST" class="d-inline me-1">
+                                    <button type="submit"
+                                            th:class="${news.published ? 'btn btn-sm btn-outline-warning' : 'btn btn-sm btn-outline-success'}"
+                                            th:title="${news.published ? 'Ẩn bài viết' : 'Hiện bài viết'}">
+                                        <i th:class="${news.published ? 'fas fa-eye-slash' : 'fas fa-eye'}"></i>
+                                    </button>
+                                </form>
+
+                                <!-- Xóa -->
+                                <form th:action="@{/admin/news/delete/{id}(id=${news.id})}"
+                                      method="POST" class="d-inline"
+                                      onsubmit="return confirm('Bạn có chắc chắn muốn xóa bài viết này?')">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Xóa">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+
+                        <!-- Trống -->
+                        <tr th:if="${#lists.isEmpty(newsList)}">
+                            <td colspan="6" class="text-center py-5 text-muted">
+                                <i class="bi bi-newspaper fs-1 d-block mb-2 opacity-25"></i>
+                                Chưa có bài viết nào trong hệ thống.
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
     </div>
-  </div>
-    </main>
-  </div>
-  <div th:replace="~{fragments/footer :: admin-footer}"></div>
+
+    <div th:replace="~{fragments/footer :: admin-footer}"></div>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>

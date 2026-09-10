@@ -3,6 +3,7 @@ package com.garage.repair.dto;
 import com.garage.repair.model.RepairOrder.RepairStatus;
 import lombok.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -12,8 +13,12 @@ import java.util.List;
 @Builder
 public class RepairUpdateRequest {
 
-    private RepairStatus status;
+    private Long vehicleId;
+    private Long customerId;
     private Long technicianId;
+    private RepairStatus status;
     private String note;
-    private List<RepairRequest.RepairItemRequest> items;
+
+    @Builder.Default
+    private List<RepairRequest.RepairItemRequest> items = new ArrayList<>();
 }

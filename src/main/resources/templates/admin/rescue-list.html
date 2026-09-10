@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -71,14 +71,17 @@
                         <td th:text="${r.location}"></td>
                         <td th:text="${r.technicianName}"></td>
                         <td>
-                            <span class="badge" th:classappend="${r.status.name() == 'PENDING' ? 'bg-danger' : (r.status.name() == 'IN_PROGRESS' ? 'bg-warning text-dark' : (r.status.name() == 'COMPLETED' ? 'bg-success' : 'bg-secondary'))}" th:text="${r.status}"></span>
+                            <span class="badge"
+                                  th:classappend="${r.status != null ? (r.status.name() == 'PENDING' ? 'bg-danger' : (r.status.name() == 'ACCEPTED' || r.status.name() == 'CONFIRMED' ? 'bg-info text-dark' : (r.status.name() == 'IN_PROGRESS' || r.status.name() == 'PROCESSING' ? 'bg-warning text-dark' : (r.status.name() == 'COMPLETED' ? 'bg-success' : 'bg-secondary')))) : 'bg-secondary'}"
+                                  th:text="${r.status != null ? r.status : 'PENDING'}">
+                            </span>
                         </td>
-                        <td th:text="${#temporals.format(r.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                        <td th:text="${r.createdAt != null ? #temporals.format(r.createdAt, 'dd/MM/yyyy HH:mm') : '-'}"></td>
                         <td class="text-center">
                             <a th:href="@{/admin/rescue/{id}(id=${r.id})}" class="btn btn-sm btn-primary"><i class="bi bi-gear-fill"></i> Xử lý</a>
                         </td>
                     </tr>
-                    <tr th:if="${rescuePage.content.empty}">
+                    <tr th:if="${rescuePage == null || rescuePage.content.empty}">
                         <td colspan="8" class="text-center text-muted py-4">Chưa có yêu cầu cứu hộ nào.</td>
                     </tr>
                     </tbody>

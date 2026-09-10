@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -38,7 +38,7 @@
                             <div class="col-md-6">
                                 <p class="mb-2"><strong>Vị Trí Hiện Tại:</strong> <span class="text-danger fw-bold" th:text="${rescue.location}"></span></p>
                                 <p class="mb-2"><strong>Mô Tả Sự Cố:</strong> <span th:text="${rescue.description}"></span></p>
-                                <p class="mb-0"><strong>Thời Gian Gửi Yêu Cầu:</strong> <span th:text="${#temporals.format(rescue.createdAt, 'dd/MM/yyyy HH:mm:ss')}"></span></p>
+                                <p class="mb-0"><strong>Thời Gian Gửi Yêu Cầu:</strong> <span th:text="${rescue.createdAt != null ? #temporals.format(rescue.createdAt, 'dd/MM/yyyy HH:mm:ss') : '-'}"></span></p>
                             </div>
                         </div>
 

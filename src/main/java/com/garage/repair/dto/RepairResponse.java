@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -22,13 +23,16 @@ public class RepairResponse {
     private Long customerId;
     private String customerName;
     private String customerPhone;
+    private Long technicianId;
     private String technicianName;
     private RepairStatus status;
     private BigDecimal totalAmount;
     private String note;
     private LocalDateTime createdAt;
     private LocalDateTime completedAt;
-    private List<RepairItemResponse> items;
+
+    @Builder.Default
+    private List<RepairItemResponse> items = new ArrayList<>();
 
     @Getter
     @Setter
@@ -37,6 +41,8 @@ public class RepairResponse {
     @Builder
     public static class RepairItemResponse {
         private Long id;
+        private Long serviceId;
+        private Long sparePartId;
         private String itemName;
         private String type; // SERVICE / SPARE_PART
         private Integer quantity;

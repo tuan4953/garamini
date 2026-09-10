@@ -67,10 +67,17 @@ public class RescueService {
 
     // --- CÁC HÀM HIỆN CÓ CỦA BẠN (GIỮ NGUYÊN) ---
 
+    @Transactional(readOnly = true)
     public Page<RescueResponseDto> searchRequests(RescueStatus status, String keyword, Pageable pageable) {
+        if (keyword != null && keyword.trim().isEmpty()) {
+            keyword = null;
+        } else if (keyword != null) {
+            keyword = keyword.trim();
+        }
         return rescueRepository.searchRescueRequests(status, keyword, pageable).map(this::mapToResponse);
     }
 
+    @Transactional(readOnly = true)
     public RescueResponseDto getRequestById(Long id) {
         return mapToResponse(rescueRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy yêu cầu cứu hộ ID: " + id)));

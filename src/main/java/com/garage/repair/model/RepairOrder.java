@@ -62,6 +62,24 @@ public class RepairOrder {
     }
 
     public enum RepairStatus {
-        RECEIVING, DIAGNOSING, IN_PROGRESS, COMPLETED, CANCELLED
+        RECEIVING,
+        RECEIVED,
+        DIAGNOSING,
+        IN_PROGRESS,
+        COMPLETED,
+        CANCELLED,
+        PENDING,
+        ACCEPTED,
+        CONFIRMED,
+        PROCESSING,
+        REJECTED,
+        WAITING,
+        APPROVED,
+        FIXING,
+        ASSIGNED,
+        WAITING_PARTS,
+        FINISHED,
+        DONE,
+        PAID
     }
 }

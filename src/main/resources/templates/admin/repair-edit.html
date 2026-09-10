@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tạo Phiếu Sửa Chữa - Admin T-RIDE</title>
+    <title>Chỉnh Sửa Phiếu Sửa Chữa - Admin T-RIDE</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
     <link rel="stylesheet" th:href="@{/css/tride-layout.css}">
@@ -27,20 +27,20 @@
         <main class="admin-content">
             <div class="container-fluid" style="max-width: 900px;">
                 <div class="card shadow-sm border-0 rounded-3">
-                    <div class="card-header bg-primary text-white py-3 d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 fw-bold"><i class="bi bi-plus-circle me-2"></i>Tạo Phiếu Sửa Chữa Mới</h5>
+                    <div class="card-header bg-dark text-white py-3 d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0 fw-bold"><i class="bi bi-pencil-square text-warning me-2"></i>Chỉnh Sửa Phiếu #<span class="text-warning" th:text="${repair.orderCode}"></span></h5>
                         <a th:href="@{/admin/repairs}" class="btn btn-sm btn-light fw-bold">&larr; Danh sách</a>
                     </div>
                     <div class="card-body p-4">
-                        <form th:action="@{/admin/repairs/create}" th:object="${repairRequest}" method="post">
+                        <form th:action="@{/admin/repairs/{id}/edit(id=${repair.id})}" method="post">
                             <div class="row g-3 mb-3">
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Chọn Phương Tiện <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-semibold">Phương Tiện <span class="text-danger">*</span></label>
                                     <select name="vehicleId" id="vehicleSelect" class="form-select" required onchange="onVehicleChange(this)">
-                                        <option value="">-- Chọn xe --</option>
                                         <option th:each="v : ${vehicles}"
                                                 th:value="${v.id}"
                                                 th:data-owner-id="${v.owner != null ? v.owner.id : ''}"
+                                                th:selected="${v.id == repair.vehicleId}"
                                                 th:text="${v.licensePlate + ' - ' + v.brand + ' ' + v.model + ' (Chủ: ' + (v.owner != null ? v.owner.fullName : 'N/A') + ')'}">
                                         </option>
                                     </select>
@@ -48,9 +48,9 @@
                                 <div class="col-md-6">
                                     <label class="form-label fw-semibold">Khách Hàng</label>
                                     <select name="customerId" id="customerSelect" class="form-select">
-                                        <option value="">-- Mặc định theo chủ xe --</option>
                                         <option th:each="c : ${customers}"
                                                 th:value="${c.id}"
+                                                th:selected="${c.id == repair.customerId}"
                                                 th:text="${c.fullName + ' - SĐT: ' + c.phone}">
                                         </option>
                                     </select>
@@ -61,21 +61,24 @@
                                         <option value="">-- Chưa phân công --</option>
                                         <option th:each="t : ${technicians}"
                                                 th:value="${t.id}"
+                                                th:selected="${t.id == repair.technicianId}"
                                                 th:text="${t.fullName + ' (' + t.role + ')'}">
                                         </option>
                                     </select>
                                 </div>
                                 <div class="col-md-6">
-                                    <label class="form-label fw-semibold">Trạng Thái Ban Đầu</label>
+                                    <label class="form-label fw-semibold">Trạng Thái</label>
                                     <select name="status" class="form-select">
-                                        <option value="RECEIVING" selected>TIẾP NHẬN</option>
-                                        <option value="DIAGNOSING">CHẨN ĐOÁN</option>
-                                        <option value="IN_PROGRESS">ĐANG SỬA CHỮA</option>
+                                        <option th:each="st : ${statuses}"
+                                                th:value="${st}"
+                                                th:selected="${st == repair.status}"
+                                                th:text="${st.name() == 'RECEIVING' ? 'TIẾP NHẬN' : (st.name() == 'DIAGNOSING' ? 'CHẨN ĐOÁN' : (st.name() == 'IN_PROGRESS' ? 'ĐANG SỬA CHỮA' : (st.name() == 'COMPLETED' ? 'HOÀN THÀNH' : 'ĐÃ HỦY')))}">
+                                        </option>
                                     </select>
                                 </div>
                                 <div class="col-12">
-                                    <label class="form-label fw-semibold">Ghi Chú Yêu Cầu</label>
-                                    <textarea th:field="*{note}" class="form-control" rows="3" placeholder="Ghi chú về tình trạng hỏng hóc..."></textarea>
+                                    <label class="form-label fw-semibold">Ghi Chú Tiến Độ</label>
+                                    <textarea name="note" class="form-control" rows="3" th:text="${repair.note}"></textarea>
                                 </div>
                             </div>
 
@@ -94,8 +97,8 @@
                             </div>
 
                             <div class="d-flex justify-content-between">
-                                <a th:href="@{/admin/repairs}" class="btn btn-secondary">Quay lại</a>
-                                <button type="submit" class="btn btn-primary fw-bold px-4"><i class="bi bi-check-circle me-1"></i>Lưu Đơn Sửa Chữa</button>
+                                <a th:href="@{/admin/repairs}" class="btn btn-secondary">Hủy bỏ</a>
+                                <button type="submit" class="btn btn-success fw-bold px-4"><i class="bi bi-check-circle me-1"></i>Lưu Thay Đổi</button>
                             </div>
                         </form>
                     </div>
@@ -111,6 +114,7 @@
     /*<![CDATA[*/
     const activeServices = /*[[${services}]]*/ [];
     const activeSpareParts = /*[[${spareParts}]]*/ [];
+    const existingItems = /*[[${repair.items}]]*/ [];
     /*]]>*/
 
     function onVehicleChange(selectEl) {
@@ -127,7 +131,7 @@
         return new Intl.NumberFormat('vi-VN').format(amount) + ' đ';
     }
 
-    function addItemRow() {
+    function addItemRow(itemData = null) {
         const container = document.getElementById('itemsContainer');
         const index = container.children.length;
 
@@ -135,40 +139,50 @@
         row.className = 'item-row';
         row.id = `row_${index}`;
 
+        const isService = itemData ? (itemData.type === 'DỊCH VỤ' || (itemData.serviceId && !itemData.sparePartId)) : true;
+        const selectedType = isService ? 'SERVICE' : 'SPARE_PART';
+        const selectedServiceId = itemData && itemData.serviceId ? itemData.serviceId : '';
+        const selectedSparePartId = itemData && itemData.sparePartId ? itemData.sparePartId : '';
+        const qty = itemData && itemData.quantity ? itemData.quantity : 1;
+        const unitPrice = itemData && itemData.unitPrice ? itemData.unitPrice : 0;
+        const total = qty * unitPrice;
+
         let serviceOptions = `<option value="">-- Chọn dịch vụ --</option>`;
         activeServices.forEach(s => {
-            serviceOptions += `<option value="${s.id}" data-price="${s.price}">${s.name} (${formatCurrency(s.price)})</option>`;
+            const sel = (s.id == selectedServiceId) ? 'selected' : '';
+            serviceOptions += `<option value="${s.id}" data-price="${s.price}" ${sel}>${s.name} (${formatCurrency(s.price)})</option>`;
         });
 
         let sparePartOptions = `<option value="">-- Chọn phụ tùng --</option>`;
         activeSpareParts.forEach(p => {
-            sparePartOptions += `<option value="${p.id}" data-price="${p.price}">${p.name} (${formatCurrency(p.price)})</option>`;
+            const sel = (p.id == selectedSparePartId) ? 'selected' : '';
+            sparePartOptions += `<option value="${p.id}" data-price="${p.price}" ${sel}>${p.name} (${formatCurrency(p.price)})</option>`;
         });
 
         row.innerHTML = `
             <div class="row g-2 align-items-center">
                 <div class="col-md-3">
                     <select name="items[${index}].type" class="form-select form-select-sm" onchange="toggleItemType(this, ${index})">
-                        <option value="SERVICE" selected>🛠 Dịch vụ sửa chữa</option>
-                        <option value="SPARE_PART">📦 Phụ tùng linh kiện</option>
+                        <option value="SERVICE" ${selectedType === 'SERVICE' ? 'selected' : ''}>🛠 Dịch vụ sửa chữa</option>
+                        <option value="SPARE_PART" ${selectedType === 'SPARE_PART' ? 'selected' : ''}>📦 Phụ tùng linh kiện</option>
                     </select>
                 </div>
                 <div class="col-md-4">
-                    <select name="items[${index}].serviceId" id="service_${index}" class="form-select form-select-sm" onchange="onSelectItem(this, ${index})">
+                    <select name="items[${index}].serviceId" id="service_${index}" class="form-select form-select-sm ${selectedType === 'SERVICE' ? '' : 'd-none'}" onchange="onSelectItem(this, ${index})">
                         ${serviceOptions}
                     </select>
-                    <select name="items[${index}].sparePartId" id="sparePart_${index}" class="form-select form-select-sm d-none" onchange="onSelectItem(this, ${index})">
+                    <select name="items[${index}].sparePartId" id="sparePart_${index}" class="form-select form-select-sm ${selectedType === 'SPARE_PART' ? '' : 'd-none'}" onchange="onSelectItem(this, ${index})">
                         ${sparePartOptions}
                     </select>
                 </div>
                 <div class="col-md-2">
                     <div class="input-group input-group-sm">
                         <span class="input-group-text">SL</span>
-                        <input type="number" name="items[${index}].quantity" min="1" value="1" class="form-control form-control-sm text-center" oninput="calcRowTotal(${index})" id="qty_${index}">
+                        <input type="number" name="items[${index}].quantity" min="1" value="${qty}" class="form-control form-control-sm text-center" oninput="calcRowTotal(${index})" id="qty_${index}">
                     </div>
                 </div>
                 <div class="col-md-2">
-                    <input type="number" name="items[${index}].unitPrice" value="0" class="form-control form-control-sm text-end" placeholder="Đơn giá" oninput="calcRowTotal(${index})" id="price_${index}">
+                    <input type="number" name="items[${index}].unitPrice" value="${unitPrice}" class="form-control form-control-sm text-end" placeholder="Đơn giá" oninput="calcRowTotal(${index})" id="price_${index}">
                 </div>
                 <div class="col-md-1 text-end">
                     <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeRow('row_${index}')">
@@ -178,7 +192,7 @@
             </div>
             <div class="d-flex justify-content-end align-items-center gap-2 mt-1 pe-1">
                 <small class="text-muted">Thành tiền:</small>
-                <small class="fw-bold text-danger" id="rowTotal_${index}">0 đ</small>
+                <small class="fw-bold text-danger" id="rowTotal_${index}">${formatCurrency(total)}</small>
             </div>
         `;
 
@@ -256,8 +270,12 @@
         }
     }
 
-    // Khởi tạo dòng đầu tiên
-    addItemRow();
+    // Khởi tạo các item hiện có
+    if (existingItems && existingItems.length > 0) {
+        existingItems.forEach(item => addItemRow(item));
+    } else {
+        addItemRow();
+    }
 </script>
 </body>
 </html>

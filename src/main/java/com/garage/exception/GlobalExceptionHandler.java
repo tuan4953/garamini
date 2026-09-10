@@ -12,12 +12,10 @@ public class GlobalExceptionHandler {
             ResourceNotFoundException exception,
             Model model
     ) {
-
         model.addAttribute(
                 "errorMessage",
                 exception.getMessage()
         );
-
         return "error/404";
     }
 
@@ -26,12 +24,11 @@ public class GlobalExceptionHandler {
             Exception exception,
             Model model
     ) {
-
+        exception.printStackTrace();
         model.addAttribute(
                 "errorMessage",
-                "Đã xảy ra lỗi trong hệ thống."
+                exception.getMessage() != null ? exception.getMessage() : "Đã xảy ra lỗi trong hệ thống."
         );
-
         return "error/500";
     }
 }

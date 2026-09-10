@@ -58,6 +58,18 @@ public class RescueRequest {
     }
 
     public enum RescueStatus {
-        PENDING, IN_PROGRESS, COMPLETED, CANCELLED
+        PENDING,
+        ACCEPTED,
+        CONFIRMED,
+        PROCESSING,
+        IN_PROGRESS,
+        COMPLETED,
+        CANCELLED,
+        REJECTED,
+        WAITING,
+        ARRIVED,
+        FIXING,
+        FINISHED,
+        DONE
     }
 }
